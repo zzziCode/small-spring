@@ -66,7 +66,7 @@ math: mathjax
 
 ​		按照上面的分析，代码的主要逻辑就是将bean的实例化对象存储到一个容器中，之后通过bean的名称获取，实现这中功能的容器一般是Map，整个流程如下：
 
-<img src="https://bugstack.cn/assets/images/spring/spring-2-01.png" alt="img" style="zoom: 50%;" />
+<img src="https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202310301326618.png" alt="img" style="zoom: 50%;" />
 
 ## 实现
 
