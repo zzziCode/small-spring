@@ -33,7 +33,11 @@ public class AppTest {
         //userService.queryUserInfo();
         //System.out.println(userService);
 
-        UserService userService = (UserService) beanFactory.getBean("userService", "小王");
+        //UserService userService = (UserService) beanFactory.getBean("userService", "小王");
+        //userService.queryUserInfo();
+        //System.out.println(userService);
+
+        UserService userService = (UserService) beanFactory.getBean("userService");
         userService.queryUserInfo();
         System.out.println(userService);
     }
