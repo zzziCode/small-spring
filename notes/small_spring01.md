@@ -66,7 +66,7 @@ math: mathjax
 
 ​		按照上面的分析，代码的主要逻辑就是将bean的实例化对象存储到一个容器中，之后通过bean的名称获取，实现这中功能的容器一般是Map，整个流程如下：
 
-<img src="https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202310301326618.png" alt="img" style="zoom: 50%;" />
+<img src="https://bugstack.cn/assets/images/spring/spring-2-01.png" alt="img" style="zoom: 50%;" />
 
 ## 实现
 
@@ -99,8 +99,6 @@ public void testBeanFactory() {
 
 可以看出测试的过程就是上面描述的三步，只不过相比于真正的spting，大大的简化了所有的步骤
 
-这里只是将bean放在容器中进行存储，创建的操作还是用户自己实现，那么如何将bean的创建也交给容器呢，看下一节！
-
 ## 总结
 
-本节实现了一个最基础的不标准IOC容器，后面的章节会逐步对这个容器进行扩充，下一节中将bean的创建交给了容器管理，并且创建的还是单例模式的bean
+本节实现了一个最基础的不标准IOC容器，后面的章节会逐步对这个容器进行扩充
