@@ -72,7 +72,7 @@ math: mathjax
 
 ​		上一节中我们创建bean的时候，使用getBean函数需要传递bean需要的参数，这样才能创建带参的bean对象，这一节中我们不传递任何参数，只是将需要哪些参数的信息保存到一个类中，先创建空的bean对象，然后再进行**属性填充**，新的项目结构为：
 
-![image-20231031165753636](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202310311657136.png)
+![image-20231031165753636](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202310312106904.png)
 
 不再是创建bean时就填充属性，而是创建好了之后再填充属性，这样就不用在getBean时就传递已经实例化的bean属性了，也就是`getBean("userService")`时不需要实例化`userDao`的bean对象，只有内部真正需要的时候才创建
 
@@ -156,10 +156,12 @@ math: mathjax
    
    ```
 
-   ​		第10~15行是最关键的代码，这一段代码中描述的是，如果当前bean依赖的是另外一个bean（取出的属性值是一个`BeanReference`类型的对象），此时才创建当前这个bean对象，内部调用`getBean`方法，还是按照之前分析的思路，先创建空bean，然后再属性填充，如果属性填充的过程中又依赖bean，那么再临时创建这个bean对象，继续执行先创建空bean，再属性填充的操作
+   ​		第10~15行是最关键的代码，这一段代码中描述的是，如果当前bean依赖的是另外一个bean（取出的属性值是一个`BeanReference`类型的对象），此时才创建当前这个bean对象，内部调用`getBean`方法，还是按照之前分析的思路，先创建空bean，然后再属性填充，如果属性填充的过程中又依赖bean，那么再临时创建这个bean对象，继续执行先创建空bean，再属性填充的操作，具体的流程如下图，可以看到多了一步**属性填充**的操作：
+
+   <img src="https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311011307805.png" alt="未命名文件 (1)" style="zoom:50%;" />
 
    ​		上面描述了创建bean的过程，分为创建空bean和属性填充，那么外部是如何获取这个bean的呢，给出一段测试的代码，详细的代码在[仓库](https://github.com/zzziCode/small-spring.git)中：
-
+   
    ```java
    @Test
    public void test_BeanFactory() {
@@ -183,7 +185,7 @@ math: mathjax
        userService.queryUserInfo();
    }
    ```
-
+   
    ​		可以发现，获取bean调用的`getBean`操作并没有传递任何参数，也就是调用的底层的无参构造，然后在获取bean的时候，将bean所依赖的一些属性保存到了`PropertyValues`中，重点注意第**12**行，这里`userService`的bean依赖于us`e`rDao的bean，保存属性时不是直接保存`userDao`的bean对象，而是保存了一个`BeanReference`的对象，内部存储了`userDao`的bean对象的**名称**
 
 ## 总结
