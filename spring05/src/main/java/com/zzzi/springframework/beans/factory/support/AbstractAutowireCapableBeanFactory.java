@@ -33,6 +33,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
+        //创建完新的bean对象你给之后，将其保存到容器中
         addSingleton(beanName, bean);
         return bean;
     }

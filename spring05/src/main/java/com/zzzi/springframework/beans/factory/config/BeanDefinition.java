@@ -7,6 +7,8 @@ import com.zzzi.springframework.beans.PropertyValues;
  * @date 2023/11/1 13:44
  * 在这里保存bean的注册信息
  * 包括bean的类信息和其依赖的属性列表
+ *
+ * 使用时需要注意，两个属性都不能为空
  */
 public class BeanDefinition {
     //要确保两个属性都不为空

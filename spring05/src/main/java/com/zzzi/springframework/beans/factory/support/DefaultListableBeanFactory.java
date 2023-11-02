@@ -34,6 +34,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         return beanDefinitionMap.containsKey(beanName);
     }
 
+    /**@author zzzi
+     * @date 2023/11/2 15:26
+     * 按照类型获取bean对象，将存储这些符合要求的bean对象的容器返回
+     */
     @Override
     public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException {
         Map<String, T> result = new HashMap<>();

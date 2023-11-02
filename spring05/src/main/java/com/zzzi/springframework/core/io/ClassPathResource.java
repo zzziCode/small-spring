@@ -8,6 +8,8 @@ import java.io.InputStream;
 /**@author zzzi
  * @date 2023/11/1 14:40
  * 在这里实现第一种获取资源的方式
+ *
+ * 不能出现空指针，所以初始化时务必每一个成员变量都有初值
  */
 public class ClassPathResource implements Resource {
     private final String path;
@@ -17,7 +19,7 @@ public class ClassPathResource implements Resource {
         this.path = path;
         this.classLoader = (classLoader != null ? classLoader : ClassUtils.getDefaultClassLoader());
     }
-
+    //调用另外一个构造函数
     public ClassPathResource(String path) {
         this(path, (ClassLoader) null);
     }
