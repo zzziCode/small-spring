@@ -5,19 +5,21 @@ package com.zzzi.springframework.beans.factory.config;
  * 还有属性列表
  */
 public class BeanDefinition {
+    //要确保两个属性都不为空
     private Class beanClass;
     private PropertyValues propertyValues;
 
     public BeanDefinition() {
     }
 
-    public BeanDefinition(Class beanClass, PropertyValues propertyValues) {
-        this.beanClass = beanClass;
-        this.propertyValues = propertyValues;
-    }
-    //当bean没有属性时，可以只注册bean的类信息
     public BeanDefinition(Class beanClass) {
         this.beanClass = beanClass;
+        this.propertyValues = new PropertyValues();
+    }
+
+    public BeanDefinition(Class beanClass, PropertyValues propertyValues) {
+        this.beanClass = beanClass;
+        this.propertyValues = propertyValues != null ? propertyValues : new PropertyValues();
     }
 
     public Class getBeanClass() {
