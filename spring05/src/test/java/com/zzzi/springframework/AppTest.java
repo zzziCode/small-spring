@@ -25,8 +25,12 @@ public class AppTest {
         // 2. 读取配置文件&注册Bean
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
         //读取配置文件
+        //第一种方式：ClassPath
+        reader.loadBeanDefinitions("classpath:spring.xml");
+        //第二种方式：系统文件
         FileSystemResource fileSystemResource=new FileSystemResource(new File("G:\\Java\\spring\\spring05\\src\\test\\resources\\spring.xml"));
-        reader.loadBeanDefinitions(fileSystemResource);
+        //reader.loadBeanDefinitions(fileSystemResource);
+
 
         // 3. 获取Bean对象调用方法
         UserService userService = beanFactory.getBean("userService", UserService.class);
