@@ -2,7 +2,7 @@
 <beans>
     <bean id="userDao" class="com.zzzi.springframework.bean.UserDao"/>
     <bean id="userService" class="com.zzzi.springframework.bean.UserService">
-        <property name="uId" value="1"/>
+        <property name="uId" value="2"/>
         <property name="userDao" ref="userDao"/>
     </bean>
 </beans>
