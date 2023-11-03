@@ -158,7 +158,7 @@ math: mathjax
 
    ​		第10~15行是最关键的代码，这一段代码中描述的是，如果当前bean依赖的是另外一个bean（取出的属性值是一个`BeanReference`类型的对象），此时才创建当前这个bean对象，内部调用`getBean`方法，还是按照之前分析的思路，先创建空bean，然后再属性填充，如果属性填充的过程中又依赖bean，那么再临时创建这个bean对象，继续执行先创建空bean，再属性填充的操作，具体的流程如下图，可以看到多了一步**属性填充**的操作：
 
-   <img src="https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311011307805.png" alt="未命名文件 (1)" style="zoom:50%;" />
+   <img src="https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311030859937.png" alt="image-20231103085923756" style="zoom:50%;" />
 
    ​		上面描述了创建bean的过程，分为创建空bean和属性填充，那么外部是如何获取这个bean的呢，给出一段测试的代码，详细的代码在[仓库](https://github.com/zzziCode/small-spring.git)中：
    

@@ -254,7 +254,7 @@ public void test_xml() {
 
 资源加载和利用结束之后，才是**getBean**的操作，也就是在获取bean的前面进行增加了一个读取配置文件的模块，读取完之后就是之前介绍的正常获取bean的过程，流程图如下：
 
-<img src="https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311011328783.png" alt="image-20231101132003431" style="zoom:60%;" />
+<img src="https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311030859937.png" alt="image-20231103085923756" style="zoom:50%;" />
 
 经历上面两个流程之后，就可以实现bean的获取，在第一部分中实现了bean的注册信息从配置文件中读取的效果，对代码进行debug之后，效果如下图：
 

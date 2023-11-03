@@ -11,7 +11,8 @@ import java.util.Map;
  * 按照类型获取bean对象
  * 获取所有已注册的bean对象的名称
  */
-public interface ListableBeanFactory extends BeanFactory{
+public interface ListableBeanFactory extends BeanFactory {
     <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException;
+
     String[] getBeanDefinitionNames();
 }
