@@ -39,7 +39,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     /**
      * @author zzzi
      * @date 2023/10/31 19:54
-     * 获取一个bean对象
+     * 获取一个bean对象,创建一个空bean
      */
     private Object createBeanInstance(String beanName, BeanDefinition beanDefinition, Object[] args) {
         //如果参数列表为空，直接调用实例化策略创建无参对象并返回

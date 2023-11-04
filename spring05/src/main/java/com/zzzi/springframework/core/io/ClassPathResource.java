@@ -19,7 +19,7 @@ public class ClassPathResource implements Resource {
         this.path = path;
         this.classLoader = (classLoader != null ? classLoader : ClassUtils.getDefaultClassLoader());
     }
-    //调用另外一个构造函数
+    //调用另外一个构造函数，传递空值
     public ClassPathResource(String path) {
         this(path, (ClassLoader) null);
     }
