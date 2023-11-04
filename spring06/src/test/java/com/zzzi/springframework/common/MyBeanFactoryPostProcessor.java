@@ -7,7 +7,10 @@ import com.zzzi.springframework.beans.PropertyValues;
 import com.zzzi.springframework.beans.factory.ConfigurableListableBeanFactory;
 import com.zzzi.springframework.beans.factory.config.BeanDefinition;
 import com.zzzi.springframework.beans.factory.config.BeanFactoryPostProcessor;
-
+/**@author zzzi
+ * @date 2023/11/3 16:38
+ * 在这里实现实例化之前的自定义修改操作
+ */
 public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
     @Override
