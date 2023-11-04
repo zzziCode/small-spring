@@ -9,9 +9,19 @@
 ## 📑📑📑 章节目录
 
 - [x] 第一章：[实现一个简单的Bean容器](https://zzzicode.github.io/post/small_spring01/)
+
 - [x] 第二章：[将Bean的创建交给IOC容器](https://zzzicode.github.io/post/small_spring02/)
+
 - [x] 第三章：[实现带参的Bean的创建](https://zzzicode.github.io/post/small_spring03/)
+
 - [x] 第四章：[将Bean的创建和属性填充分开](https://zzzicode.github.io/post/small_spring04/)
+
 - [x] 第五章：[实现从配置文件中加载Bean的注册信息](https://zzzicode.github.io/post/small_spring05/)
+
 - [x] 第六章：[实现应用上下文，添加修改模块](https://zzzicode.github.io/post/small_spring06/)
+
+- [x] 第七章：[添加初始化和销毁模块](https://zzzicode.github.io/post/small_spring07/)
+
 - [ ] 待实现。。。
+
+  
