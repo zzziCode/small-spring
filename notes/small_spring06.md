@@ -251,11 +251,7 @@ math: mathjax
    >     // 2. 获取 BeanFactory
    >     ConfigurableListableBeanFactory beanFactory = getBeanFactory();
    > 
-   >     /**@author zzzi
-   >          * @date 2023/11/2 19:44
-   >          * 下面两个方法invoke和register有什么用
-   >          */
-   >     // 3. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (Invoke factory processors registered as beans in the context.)
+   >        // 3. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (Invoke factory processors registered as beans in the context.)
    >     //修改bean的属性列表，相当于在实例化之前修改bean的注册信息
    >     invokeBeanFactoryPostProcessors(beanFactory);
    > 
@@ -268,7 +264,7 @@ math: mathjax
    >     beanFactory.preInstantiateSingletons();
    > }
    > ```
-
+   
 3. refresh函数中调用`refreshBeanFactory`方法，目的是为了获取到beanFactory对象，为了后期bean的注册和实例化做准备：
 
    ![image-20231103102429425](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311031107850.png)
