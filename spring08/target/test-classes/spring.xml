@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="userDao" class="com.zzzi.springframework.bean.UserDao" init-method="initDataMethod"
+          destroy-method="destroyDataMethod"/>
+
+    <bean id="userService" class="com.zzzi.springframework.bean.UserService">
+        <!--属性注入时注入的是普通属性，容器资源并没有注入-->
+        <property name="uId" value="2"/>
+        <property name="company" value="腾讯"/>
+        <property name="location" value="深圳"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+</beans>
