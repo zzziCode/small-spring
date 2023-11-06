@@ -149,7 +149,7 @@ private void invokeInitMethods(String beanName, Object bean, BeanDefinition bean
 }
 ```
 
- 		对于销毁操作来说，由于不是立马调用，所以需要经过封装的操作，下面详细介绍为了封装销毁模块以及实现初始化模块，项目中类的变化
+​		对于销毁操作来说，由于不是立马调用，所以需要经过封装的操作，下面详细介绍为了封装销毁模块以及实现初始化模块，项目中类的变化
 
 ### 类的说明
 
