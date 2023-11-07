@@ -107,7 +107,7 @@ public class UserDao {
    直接在bean的类中自定义初始化方法和销毁方法的方法名和方法体，然后在配置文件中增加两个配置，分别是`init-method`和`destroy-method`，在其中指定方法名。
 
    ```xml
-   <bean id="userDao" class="com.zzzi.springframework.test.bean.UserDao" init-method="initDataMethod" destroy-method="destroyDataMethod"/>
+   <bean id="userDao" class="com.zzzi.com.zzzi.springframework.test.bean.UserDao" init-method="initDataMethod" destroy-method="destroyDataMethod"/>
    ```
 
    只要在这里配置了，那么在加载bean的注册信息时，就一定会读取到其中配置的方法名，然后在`BeanDefinition`中增加了两个字段，用于保存读取到的方法名

@@ -208,9 +208,10 @@ math: mathjax
 ​		以上这些新增的类主要是实现了描述的第二步，资源的利用，将bean的注册信息由手动变成自动，在之前的章节中，测试代码中需要手动将bean的注册信息创建好，本节的目标是将这些注册信息保存到xml文件中，xml文件的例子如下：
 
 ```xml
+
 <beans>
-    <bean id="userDao" class="cn.bugstack.springframework.test.bean.UserDao"/>
-    <bean id="userService" class="cn.bugstack.springframework.test.bean.UserService">
+    <bean id="userDao" class="cn.bugstack.com.zzzi.springframework.test.bean.UserDao"/>
+    <bean id="userService" class="cn.bugstack.com.zzzi.springframework.test.bean.UserService">
         <property name="uId" value="10001"/>
         <property name="userDao" ref="userDao"/>
     </bean>

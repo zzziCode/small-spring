@@ -8,6 +8,8 @@
 
 ## 📑📑📑 章节目录
 
+​		下面提供一个仓库目录，针对每一章都有一个博客来详细介绍项目中的内容
+
 - [x] 第一章：[实现一个简单的Bean容器](https://zzzicode.github.io/post/small_spring01/)
 
 - [x] 第二章：[将Bean的创建交给IOC容器](https://zzzicode.github.io/post/small_spring02/)
@@ -21,6 +23,10 @@
 - [x] 第六章：[实现应用上下文，添加修改模块](https://zzzicode.github.io/post/small_spring06/)
 
 - [x] 第七章：[添加初始化和销毁模块](https://zzzicode.github.io/post/small_spring07/)
+
+- [x] 第八章：[Aware感知注入容器资源](https://zzzicode.github.io/post/small_spring08/)
+
+- [x] 第九章：[多种模式以及多种方式创建Bean对象](https://zzzicode.github.io/post/small_spring09/)
 
 - [ ] 待实现。。。
 
