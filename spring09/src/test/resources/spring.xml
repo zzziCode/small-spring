@@ -5,6 +5,7 @@
         <property name="uId" value="2"/>
         <property name="company" value="腾讯"/>
         <property name="location" value="深圳"/>
+        <!--这里需要的应该是内部真正的bean对象-->
         <property name="userDao" ref="proxyUserDao"/>
     </bean>
     <!--不配置作用域就默认是单例-->

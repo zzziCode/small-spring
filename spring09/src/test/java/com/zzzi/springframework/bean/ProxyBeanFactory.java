@@ -6,7 +6,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
-
+/**@author zzzi
+ * @date 2023/11/7 11:12
+ * 在这个内部创建真正的bean
+ */
 public class ProxyBeanFactory implements FactoryBean<IUserDao> {
     @Override
     public IUserDao getObject() throws Exception {
