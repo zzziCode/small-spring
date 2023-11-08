@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <!--在这里配置了三种事件监听器，监听项目中的三种事件，看分别怎么触发-->
+    <bean class="com.zzzi.springframework.event.ContextRefreshedEventListener"/>
+
+    <bean class="com.zzzi.springframework.event.CustomEventListener"/>
+
+    <bean class="com.zzzi.springframework.event.ContextClosedEventListener"/>
+
+</beans>
