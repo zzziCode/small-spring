@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 
-    <bean id="userDao" class="com.zzzi.com.zzzi.springframework.bean.UserDao" init-method="initDataMethod"
+    <bean id="userDao" class="com.zzzi.com.zzzi.com.zzzi.springframework.bean.UserDao" init-method="initDataMethod"
           destroy-method="destroyMethod"/>
 
 
-    <bean id="userService" class="com.zzzi.com.zzzi.springframework.bean.UserService">
+    <bean id="userService" class="com.zzzi.com.zzzi.com.zzzi.springframework.bean.UserService">
         <property name="uId" value="3"/>
         <property name="company" value="腾讯"/>
         <property name="location" value="深圳"/>
@@ -14,7 +14,7 @@
 
     <!--因为注册了这两个对bean进行修改的类，所以读取配置也就是在读取配置文件时文件时会自动实现bean的修改-->
     <!--这种自定义的修改类被注册成了bean，，会将其读取到BeanDefinition中-->
-    <bean class="com.zzzi.com.zzzi.springframework.common.MyBeanPostProcessor"/>
-    <bean class="com.zzzi.com.zzzi.springframework.common.MyBeanFactoryPostProcessor"/>
+    <bean class="com.zzzi.com.zzzi.com.zzzi.springframework.common.MyBeanPostProcessor"/>
+    <bean class="com.zzzi.com.zzzi.com.zzzi.springframework.common.MyBeanFactoryPostProcessor"/>
 
 </beans>

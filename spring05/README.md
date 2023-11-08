@@ -210,8 +210,8 @@ math: mathjax
 ```xml
 
 <beans>
-    <bean id="userDao" class="cn.bugstack.com.zzzi.springframework.test.bean.UserDao"/>
-    <bean id="userService" class="cn.bugstack.com.zzzi.springframework.test.bean.UserService">
+    <bean id="userDao" class="cn.bugstack.com.zzzi.com.zzzi.springframework.test.bean.UserDao"/>
+    <bean id="userService" class="cn.bugstack.com.zzzi.com.zzzi.springframework.test.bean.UserService">
         <property name="uId" value="10001"/>
         <property name="userDao" ref="userDao"/>
     </bean>
