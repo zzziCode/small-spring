@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <!--====第一种类型的bean====-->
+    <!--配置一个普通的bean-->
+    <bean id="userService" class="com.zzzi.springframework.bean.UserService"/>
+
+
+    <!--====第一种类型的bean====-->
+
+    <!--配置一个代理类生成器-->
+    <bean class="com.zzzi.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
+
+    <!--====第三种类型的bean====-->
+    <!--将代理信息最终全部保存到一个AspectJExpressionPointcutAdvisor对象中-->
+    <!--在代理类执行之前执行什么逻辑-->
+    <!--只有这个逻辑需要自己编写，其余的都是固定需要加入的东西-->
+    <bean id="beforeAdvice" class="com.zzzi.springframework.bean.UserServiceBeforeAdvice"/>
+
+    <!--拦截到方法之后，执行代理类之前执行的逻辑beforeAdvice-->
+    <bean id="methodInterceptor"
+          class="com.zzzi.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor">
+        <!--里面注入了执行前的逻辑beforeAdvice，便于触发-->
+        <property name="advice" ref="beforeAdvice"/>
+    </bean>
+
+    <!--将依赖的东西全部注册成功bean，之后就可以从IOC容器中自动获取-->
+    <!--这里相当于代理信息的封装-->
+    <bean id="pointcutAdvisor" class="com.zzzi.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
+        <!--先封装一个切入点表达式用于指定哪些方法被匹配-->
+        <property name="expression" value="execution(* com.zzzi.springframework.bean.IUserService.*(..))"/>
+        <!--后执行匹配成功的方法执行什么逻辑-->
+        <property name="advice" ref="methodInterceptor"/>
+    </bean>
+
+</beans>
