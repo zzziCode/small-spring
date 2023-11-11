@@ -14,7 +14,7 @@
 
 - [x] 第二章：[将Bean的创建交给IOC容器](https://zzzicode.github.io/post/small_spring02/)
 
-- [x] 第三章：[实现带参的Bean的创建](https://zzzicode.github.io/post/small_spring03/)
+- [x] 第三章：[实现带参的Bean创建](https://zzzicode.github.io/post/small_spring03/)
 
 - [x] 第四章：[将Bean的创建和属性填充分开](https://zzzicode.github.io/post/small_spring04/)
 
@@ -24,9 +24,11 @@
 
 - [x] 第七章：[添加初始化和销毁模块](https://zzzicode.github.io/post/small_spring07/)
 
-- [x] 第八章：[Aware感知注入容器资源](https://zzzicode.github.io/post/small_spring08/)
+- [x] 第八章：[Aware回调注入容器资源](https://zzzicode.github.io/post/small_spring08/)
 
 - [x] 第九章：[多种模式以及多种方式创建Bean对象](https://zzzicode.github.io/post/small_spring09/)
+
+- [x] 第十章：[事件机制的实现](https://zzzicode.github.io/post/small_spring10/)
 
 - [ ] 待实现。。。
 

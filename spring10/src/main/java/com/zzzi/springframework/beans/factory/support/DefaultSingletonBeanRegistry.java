@@ -15,7 +15,7 @@ import java.util.Set;
  * 第二种是销毁逻辑对象
  */
 public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
-    //保存所有的实例化bean对象
+    //保存所有的实例化bean对象，单例池
     Map<String, Object> singletonObjects = new HashMap<>();
     //保存所有的销毁逻辑
     Map<String, DisposableBean> disposableBeanMap = new HashMap<>();
@@ -51,7 +51,10 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
             }
         }
     }
-
+    /**@author zzzi
+     * @date 2023/11/8 15:22
+     * 向单例池中保存一个单例bean对象
+     */
     @Override
     public void registerSingleton(String beanName, Object singletonObject) {
         singletonObjects.put(beanName, singletonObject);

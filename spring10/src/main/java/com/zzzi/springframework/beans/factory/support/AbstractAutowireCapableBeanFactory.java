@@ -16,13 +16,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
-    public InstantiationStrategy getInstantiationStrategy() {
-        return instantiationStrategy;
-    }
 
-    public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
-        this.instantiationStrategy = instantiationStrategy;
-    }
 
     //默认的实例化策略
     private InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
@@ -38,6 +32,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             /**@author zzzi
              * @date 2023/11/3 19:38
              * 在这里面调用初始化的方法，需要执行
+             * 如果执行了AOP，那么此处的返回值不再是一个普通的bean，而是bean的代理对象（被增强的bean）
              */
             bean = initializeBean(beanName, bean, beanDefinition);
         } catch (Exception e) {
@@ -54,7 +49,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * @date 2023/11/7 9:53
          * 新增的判断逻辑
          */
-        if(beanDefinition.isSingleton())
+        if (beanDefinition.isSingleton())
             addSingleton(beanName, bean);
         return bean;
     }
@@ -64,7 +59,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * @date 2023/11/7 9:53
          * 新增的判断逻辑，非单例模式不保存销毁逻辑
          */
-        if(beanDefinition.isSingleton())
+        if (beanDefinition.isSingleton())
             return;
         if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
             /**@author zzzi
@@ -108,6 +103,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             for (PropertyValue propertyValue : propertyValues) {
                 String name = propertyValue.getName();
                 Object value = propertyValue.getValue();
+                //bean的属性是另外一个bean，那么就需要进行依赖注入
                 if (value instanceof BeanReference) {
                     BeanReference beanReference = (BeanReference) value;
                     value = getBean(beanReference.getBeanName());
@@ -124,15 +120,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         /**@author zzzi
          * @date 2023/11/6 15:52
          * 在这里增加一个容器资源注入的操作
+         * 在这里回调实现的接口中的方法
          */
         // 1. 容器资源直接注入
-        if(bean instanceof BeanFactoryAware){
+        if (bean instanceof BeanFactoryAware) {
             ((BeanFactoryAware) bean).setBeanFactory(this);
         }
-        if(bean instanceof BeanClassLoaderAware){
+        if (bean instanceof BeanClassLoaderAware) {
             ((BeanClassLoaderAware) bean).setBeanClassLoader(getClassLoader());
         }
-        if(bean instanceof BeanNameAware){
+        if (bean instanceof BeanNameAware) {
             ((BeanNameAware) bean).setBeanName(beanName);
         }
         /**@author zzzi
@@ -140,7 +137,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * 在执行BeanPostProcessor Before处理的时候，会触发修改逻辑，包装处理器的逻辑也会触发
          * 此时在包装处理器中完成容器资源注入
          */
-        // 2. 执行 BeanPostProcessor Before 处理
+        // 2. 执行 BeanPostProcessor Before 处理，初始化之前的操作
         Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
 
         // 执行 Bean 对象的初始化方法
@@ -150,7 +147,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             throw new BeansException("Invocation of init method of bean[" + beanName + "] failed", e);
         }
 
-        // 3. 执行 BeanPostProcessor After 处理
+        // 3. 执行 BeanPostProcessor After 处理，初始化之后的操作（AOP？？）
         wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
         return wrappedBean;
     }
@@ -195,5 +192,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 result = current;
         }
         return result;
+    }
+
+    public InstantiationStrategy getInstantiationStrategy() {
+        return instantiationStrategy;
+    }
+
+    public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
+        this.instantiationStrategy = instantiationStrategy;
     }
 }
