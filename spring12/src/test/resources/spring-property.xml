@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	         http://www.springframework.org/schema/beans/spring-beans.xsd
+		 http://www.springframework.org/schema/context">
+
+
+    <bean class="com.zzzi.springframework.beans.factory.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:token.properties"/>
+    </bean>
+
+    <!--手动注册bean，属性使用占位符填充-->
+    <bean id="userService" class="com.zzzi.springframework.bean.UserService">
+        <!--这一句话可以拿到token中的值-->
+        <property name="token" value="${token}"/>
+    </bean>
+
+</beans>

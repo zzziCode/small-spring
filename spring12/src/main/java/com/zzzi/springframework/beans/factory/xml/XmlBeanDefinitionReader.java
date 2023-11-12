@@ -1,23 +1,27 @@
 package com.zzzi.springframework.beans.factory.xml;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
 import com.zzzi.springframework.beans.BeansException;
 import com.zzzi.springframework.beans.PropertyValue;
 import com.zzzi.springframework.beans.factory.config.BeanDefinition;
 import com.zzzi.springframework.beans.factory.config.BeanReference;
 import com.zzzi.springframework.beans.factory.support.AbstractBeanDefinitionReader;
 import com.zzzi.springframework.beans.factory.support.BeanDefinitionRegistry;
+import com.zzzi.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import com.zzzi.springframework.core.io.Resource;
 import com.zzzi.springframework.core.io.ResourceLoader;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import cn.hutool.core.util.StrUtil;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
-/**@author zzzi
+
+/**
+ * @author zzzi
  * @date 2023/11/4 14:59
  * 在这里实现加载配置文件
  */
@@ -32,47 +36,56 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
     @Override
     public void loadBeanDefinitions(Resource resource) throws BeansException {
-        try(
-                InputStream is=resource.getInputStream();
-                ) {
+        try (
+                InputStream is = resource.getInputStream();
+        ) {
             doLoadBeanDefinitions(is);
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | DocumentException e) {
             throw new BeansException("IOException parsing XML document from " + resource, e);
         }
     }
 
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/11/4 14:53
      * 将四种loadBeanDefinitions方法的执行整合到这一个方法中执行
      */
-    protected void doLoadBeanDefinitions(InputStream inputStream) throws ClassNotFoundException {
-        Document doc = XmlUtil.readXML(inputStream);
-        Element root = doc.getDocumentElement();
-        NodeList childNodes = root.getChildNodes();
+    protected void doLoadBeanDefinitions(InputStream inputStream) throws ClassNotFoundException, DocumentException {
+        SAXReader reader = new SAXReader();
+        Document document = reader.read(inputStream);
+        Element root = document.getRootElement();
 
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            // 判断元素
-            if (!(childNodes.item(i) instanceof Element)) continue;
-            // 判断对象
-            if (!"bean".equals(childNodes.item(i).getNodeName())) continue;
+        /**@author zzzi
+         * @date 2023/11/12 11:00
+         * 第一种读取bean的方法：更加快捷，不用一个一个手写配置文件，只需要使用Component注解即可
+         * 读取xml配置包路径+类上使用Component的bean加入到注册表
+         */
+        // 解析 context:component-scan 标签，扫描包中的类并提取相关信息，用于组装 BeanDefinition
+        Element componentScan = root.element("component-scan");
+        if (null != componentScan) {
+            //读取到xml配置文件中设置的包扫描路径，进行扫描
+            String scanPath = componentScan.attributeValue("base-package");
+            if (StrUtil.isEmpty(scanPath)) {
+                throw new BeansException("The value of base-package attribute can not be empty or null");
+            }
+            //包扫描成功之后，内部所有的bean的属性都没有注入
+            scanPackage(scanPath);
+        }
 
-            // 解析标签
-            Element bean = (Element) childNodes.item(i);
-            String id = bean.getAttribute("id");
-            String name = bean.getAttribute("name");
-            String className = bean.getAttribute("class");
-            /**@author zzzi
-             * @date 2023/11/3 18:50
-             * 在这里多解析了两个标签
-             */
-            String initMethod = bean.getAttribute("init-method");
-            String destroyMethodName = bean.getAttribute("destroy-method");
-            /**@author zzzi
-             * @date 2023/11/7 9:55
-             * 新增了一个标签的解析
-             */
-            String beanScope = bean.getAttribute("scope");
+        /**@author zzzi
+         * @date 2023/11/12 11:00
+         * 第二种读取bean的方法：更加原始
+         * 读取xml配置文件中直接配置的bean加入到注册表
+         */
+        List<Element> beanList = root.elements("bean");
+        for (Element bean : beanList) {
 
+            String id = bean.attributeValue("id");
+            String name = bean.attributeValue("name");
+            String className = bean.attributeValue("class");
+            String initMethod = bean.attributeValue("init-method");
+            String destroyMethodName = bean.attributeValue("destroy-method");
+            String beanScope = bean.attributeValue("scope");
 
             // 获取 Class，方便获取类中的名称
             Class<?> clazz = Class.forName(className);
@@ -82,30 +95,24 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
                 beanName = StrUtil.lowerFirst(clazz.getSimpleName());
             }
 
-
             // 定义Bean
             BeanDefinition beanDefinition = new BeanDefinition(clazz);
-            /**@author zzzi
-             * @date 2023/11/3 18:51
-             * 如果是配置文件中配置好了标签，那么就在这里将其保存到bean的定义中
-             */
             beanDefinition.setInitMethodName(initMethod);
             beanDefinition.setDestroyMethodName(destroyMethodName);
-            //将新获取到的不为空的属性注入
-            if(StrUtil.isNotEmpty(beanScope)){
+
+            if (StrUtil.isNotEmpty(beanScope)) {
                 beanDefinition.setScope(beanScope);
             }
 
+            List<Element> propertyList = bean.elements("property");
             // 读取属性并填充
-            for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
-                if (!(bean.getChildNodes().item(j) instanceof Element)) continue;
-                if (!"property".equals(bean.getChildNodes().item(j).getNodeName())) continue;
+            for (Element property : propertyList) {
                 // 解析标签：property
-                Element property = (Element) bean.getChildNodes().item(j);
-                String attrName = property.getAttribute("name");
-                String attrValue = property.getAttribute("value");
-                String attrRef = property.getAttribute("ref");
+                String attrName = property.attributeValue("name");
+                String attrValue = property.attributeValue("value");
+                String attrRef = property.attributeValue("ref");
                 // 获取属性值：引入对象、值对象
+                //如果有bean的依赖，那么就
                 Object value = StrUtil.isNotEmpty(attrRef) ? new BeanReference(attrRef) : attrValue;
                 // 创建属性信息
                 PropertyValue propertyValue = new PropertyValue(attrName, value);
@@ -117,6 +124,18 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             // 注册 BeanDefinition
             getRegistry().registerBeanDefinition(beanName, beanDefinition);
         }
+    }
+
+    /**@author zzzi
+     * @date 2023/11/12 15:09
+     * 在xml文件读取中加入这个方法就引入了自动注册的模块
+     */
+    private void scanPackage(String scanPath) {
+        //由于读取到的包扫描路径可能是多个，所以首先解析出包扫描的路径
+        String[] split = scanPath.split(",");
+        ClassPathBeanDefinitionScanner classPathBeanDefinitionScanner = new ClassPathBeanDefinitionScanner(getRegistry());
+        //调用其中的doScan方法就可以自动注册
+        classPathBeanDefinitionScanner.doScan(split);
     }
 
     @Override
