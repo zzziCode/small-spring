@@ -1,4 +1,4 @@
-package com.zzzi.springframework.aop.framework.autoproxy;
+﻿package com.zzzi.springframework.aop.framework.autoproxy;
 
 import com.zzzi.springframework.aop.*;
 import com.zzzi.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
@@ -72,12 +72,12 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return null;
+        return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        return null;
+        return bean;
     }
 
 

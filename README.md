@@ -30,6 +30,10 @@
 
 - [x] 第十章：[事件机制的实现](https://zzzicode.github.io/post/small_spring10/)
 
+- [x] 第十一章：[引入AOP机制](https://zzzicode.github.io/post/small_spring11/)
+
+- [x] 第十二章：[自动扫描Bean对象以及属性占位符的使用](https://zzzicode.github.io/post/small_spring12/)
+
 - [ ] 待实现。。。
 
   

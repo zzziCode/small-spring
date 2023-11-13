@@ -24,7 +24,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             /**@author zzzi
              * @date 2023/11/11 16:57
-             * 为了引入AOP机制，在创建普通bean之前引入新的一步
+             * 为了引入AOP机制，在创建普通bean之前引入新的 一步
              */
             bean = resolveBeforeInstantiation(beanName, beanDefinition);
             if (null != bean) {//为空代表不需要代理，正常执行普通bean的创建
@@ -76,6 +76,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     /**@author zzzi
      * @date 2023/11/11 17:01
      * 新增的方法，为了执行xml配置文件中的AOP核心bean中的配置
+     * 在普通bean的实例化之前执行
      */
     private Object applyBeanPostProcessorsBeforeInstantiation(Class beanClass, String beanName) {
         for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
