@@ -4,7 +4,7 @@
 
 ​		在手写的过程中会简化 Spring 源码，摘取整体框架中的核心逻辑，简化代码实现过程，保留核心功能，例如：IOC、AOP、Bean生命周期、上下文、作用域、资源处理等内容实现。整个项目涉及到的bean生命周期如下图所示：
 
-![Bean生命周期](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311031622044.png)
+![](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311031622044.png)
 
 ## 📑📑📑 章节目录
 
@@ -33,6 +33,10 @@
 - [x] 第十一章：[引入AOP机制](https://zzzicode.github.io/post/small_spring11/)
 
 - [x] 第十二章：[自动扫描Bean对象以及属性占位符的使用](https://zzzicode.github.io/post/small_spring12/)
+
+- [x] 第十三章：[通过注解给bean注入依赖的属性](https://zzzicode.github.io/post/small_spring13/)
+
+- [x] 第十四章：[通过延缓代理对象的创建时机从而给代理对象进行属性填充](https://zzzicode.github.io/post/small_spring14/)
 
 - [ ] 待实现。。。
 
