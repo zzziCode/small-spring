@@ -38,6 +38,10 @@
 
 - [x] 第十四章：[通过延缓代理对象的创建时机从而给代理对象进行属性填充](https://zzzicode.github.io/post/small_spring14/)
 
+- [x] 第十五章：[利用三级缓存解决循环依赖](https://zzzicode.github.io/post/small_spring15/)
+
+- [x] 第十六章：[添加类型转换模块实现属性的类型转换](https://zzzicode.github.io/post/small_spring16/)
+
 - [ ] 待实现。。。
 
   
