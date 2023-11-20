@@ -4,7 +4,7 @@
 
 ​		在手写的过程中会简化 Spring 源码，摘取整体框架中的核心逻辑，简化代码实现过程，保留核心功能，例如：IOC、AOP、Bean生命周期、上下文、作用域、资源处理等内容实现。整个项目涉及到的bean生命周期如下图所示：
 
-<img src="G:/Java/spring/notes/img/spring-life-cycle.png" alt="spring-life-cycle" style="zoom:80%;" />
+<img src="notes/img/spring-life-cycle.png" alt="spring-life-cycle" style="zoom:80%;" />
 
 ## 📑📑📑 章节目录
 
