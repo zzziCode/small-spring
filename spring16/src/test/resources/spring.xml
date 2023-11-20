@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	         http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--正常配置的bean-->
+    <bean id="husband" class="com.zzzi.springframework.bean.Husband">
+        <property name="wifeName" value="翠花"/>
+        <!--尝试将这个字符串转换成LocalDate类型的数据-->
+        <property name="marriageDate" value="2023-11-20"/>
+    </bean>
+
+    <bean id="conversionService" class="com.zzzi.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters" ref="converters"/>
+    </bean>
+    <!--这里可以配置不止一个类型转换器-->
+    <bean id="converters" class="com.zzzi.springframework.converter.ConverterFactoryBean"/>
+
+</beans>
