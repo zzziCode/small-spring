@@ -251,8 +251,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                     Class<?> targetType = (Class<?>) TypeUtil.getFieldType(bean.getClass(), name);
                     //获取类型转换服务
                     ConversionService conversionService = getConversionService();
-                    if (conversionService.canConvert(sourceType, targetType)) {
-                        value = conversionService.convert(value, targetType);
+                    if(conversionService!=null){
+                        if (conversionService.canConvert(sourceType, targetType)) {
+                            value = conversionService.convert(value, targetType);
+                        }
                     }
                 }
                 BeanUtil.setFieldValue(bean, name, value);
