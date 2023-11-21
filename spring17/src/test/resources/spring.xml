@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	         http://www.springframework.org/schema/beans/spring-beans.xsd
+		 http://www.springframework.org/schema/context">
+
+    <!--配置了数据源和jdbc，之后可以在需要使用的地方进行注入，从而执行SQL语句-->
+    <bean id="dataSource"
+          class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/book?serverTimezone=Asia/Shanghai"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+    <!--在这里面调用Statement执行SQL语句，从而得到结果集，然后对结果集进行处理-->
+    <bean id="jdbcTemplate"
+          class="com.zzzi.springframework.jdbc.support.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+</beans>
