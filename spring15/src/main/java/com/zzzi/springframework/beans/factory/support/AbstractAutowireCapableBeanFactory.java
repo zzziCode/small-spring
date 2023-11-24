@@ -94,8 +94,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
              * @date 2023/11/16 20:08
              * 这里为了保持单例性，直接尝试从三级缓存中拿到已经创建好的bean对象
              */
-            exposedBean = getSingleton(beanName);
-            registerSingleton(beanName, exposedBean);
+            //exposedBean = getSingleton(beanName);
+            registerSingleton(beanName, bean);
         }
         return bean;
     }
@@ -106,7 +106,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
                 exposedBean = ((InstantiationAwareBeanPostProcessor) beanPostProcessor).getEarlyBeanReference(exposedBean, beanName);
                 if (exposedBean == null)
-                    return exposedBean;
+                    return null;
             }
         }
         return exposedBean;
