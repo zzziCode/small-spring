@@ -66,7 +66,7 @@ public class AppTest {
      */
     @Test
     public void testApplicationContext() {
-        //1. 获取应用上下文
+        //1. 获取应用上下文，内部封装了所有的模块
         ClassPathXmlApplicationContext applicationContext =
                 new ClassPathXmlApplicationContext("classpath:springPostProcessor.xml");
         //2. 直接获取修改后的bean对象

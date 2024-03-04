@@ -19,7 +19,7 @@ public class AppTest {
         //1.初始化BeanFactory
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
-        //2.保存要被管理的bean的类信息
+        //2.保存要被管理的bean的类信息，需要手动注册
         BeanDefinition beanDefinition = new BeanDefinition(UserService.class);
 
         //3.保存当前bean与其类信息的映射

@@ -24,7 +24,7 @@ import java.util.Set;
 public class AppTest {
     @Test
     public void testResourceXml() {
-        // 1.初始化 BeanFactory
+        // 1.初始化 BeanFactory，后期从配置文件中读取到的bean定义信息需要保存到这里
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
         // 2. 读取配置文件&注册Bean

@@ -23,7 +23,8 @@ public class AppTest {
         //获取bean工厂
         DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
 
-        //注册UserDao的信息，因为他也是一个bean
+        //注册UserDao的信息，因为它也是一个bean
+        //有两种类型的beanDefinition，一种是直接存储类，另外一种还要存储属性列表
         BeanDefinition userDaoDefinition = new BeanDefinition(UserDao.class);
         //将注册信息保存到注册表中
         factory.registerBeanDefinition("userDao", userDaoDefinition);

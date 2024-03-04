@@ -31,6 +31,7 @@ public class AppTest {
         beanFactory.registerBeanDefinition("userService", beanDefinition);
 
         // 4.获取bean，此时可以传递参数，且三种长度的参数都可以接收，这是因为有对应的构造函数
+        //获取bean对象时按照参数列表来区分
         UserService userService = (UserService) beanFactory.getBean("userService", "小张",13);
         userService.queryUserInfo();
         System.out.println(userService);
