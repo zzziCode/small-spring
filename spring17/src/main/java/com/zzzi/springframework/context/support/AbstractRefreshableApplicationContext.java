@@ -26,6 +26,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
         return beanFactory;
     }
 
+    //直接创建一个DefaultListableBeanFactory的对象交给上下文去管理
     private DefaultListableBeanFactory createBeanFactory() {
         return new DefaultListableBeanFactory();
     }

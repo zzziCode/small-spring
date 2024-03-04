@@ -25,7 +25,7 @@ public class AppTest {
         //3.保存当前bean与其类信息的映射
         beanFactory.registerBeanDefinition("userService",beanDefinition);
 
-        //4.尝试从IOC容器中获取对应的bean，并且转型
+        //4.尝试从IOC容器中获取对应的bean，并且转型，这是简单工厂的设计模式
         //内部尝试获取bean对象，没有就会新建一个bean对象保存到IOC容器中
         UserService bean = (UserService) beanFactory.getBean("userService");
         bean.print();//print方法被调用

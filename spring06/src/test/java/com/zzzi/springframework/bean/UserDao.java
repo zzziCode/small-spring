@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class UserDao {
 
-    private static Map<String, String> hashMap = new HashMap<>();
+    public static Map<String, String> hashMap = new HashMap<>();
 
     @Override
     public String toString() {

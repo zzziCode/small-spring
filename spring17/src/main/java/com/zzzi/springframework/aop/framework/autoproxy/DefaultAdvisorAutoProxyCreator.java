@@ -31,7 +31,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
      * @author zzzi
      * @date 2023/11/16 19:52
      * 在这里将bean对象的AOP过程提前，AOP过程一旦提前，后面的正常AOP过程就失效了
-     * 这里采用一个容器保存提前AOP过的对象
+     * 这里采用一个容器保存提前AOP过的对象，一旦容器中有需要的对象，后面的AOP就不用做了
      */
     @Override
     public Object getEarlyBeanReference(Object bean, String beanName) {
@@ -63,8 +63,9 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
         if (isInfrastructureClass(beanClass))
             return bean;
 
-        //拿到配置的代理信息
+        //拿到配置的代理信息，如果配置了多个切面，那么这里就会得到多个值
         Collection<AspectJExpressionPointcutAdvisor> advisors = beanFactory.getBeansOfType(AspectJExpressionPointcutAdvisor.class).values();
+        //每一个切面都尝试去匹配当前的bean
         for (AspectJExpressionPointcutAdvisor advisor : advisors) {
             //拿到类匹配器，从而判断当前类是否需要代理
             ClassFilter classFilter = advisor.getPointcut().getClassFilter();
@@ -88,6 +89,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
             advisedSupport.setProxyTargetClass(true);
 
             //调用代理工厂中的方法得到一个代理对象并返回
+            //此时代理对象内部有一个target属性，保存了被代理的bean，最终被保存到单例池中的对象是被代理对象
             return new ProxyFactory(advisedSupport).getProxy();
         }
         //当前bean没有创建成功代理对象，就返回空

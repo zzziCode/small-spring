@@ -8,7 +8,9 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
 
 import java.lang.reflect.Constructor;
-/**@author zzzi
+
+/**
+ * @author zzzi
  * @date 2023/10/31 14:03
  * 第二种实例化bean对象的策略：利用字节码来创建bean对象
  */
@@ -24,6 +26,7 @@ public class CglibSubclassingInstantiationStrategy implements InstantiationStrat
                 return super.hashCode();
             }
         });
+        //上一步没找到匹配的构造函数，这里就是null
         if (null == ctor) return enhancer.create();
         return enhancer.create(ctor.getParameterTypes(), args);
     }

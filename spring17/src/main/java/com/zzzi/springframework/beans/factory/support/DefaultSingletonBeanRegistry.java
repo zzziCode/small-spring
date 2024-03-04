@@ -68,6 +68,7 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
     /**
      * @author zzzi
      * @date 2023/11/16 19:34
+     * 创建得到的单例bean对象会调用这个方法进行保存
      * 对这个方法进行重构，保存到一级缓存单例池中之后，三级缓存和二级缓存中的内容需要删除
      */
     @Override

@@ -29,6 +29,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         return beanDefinition;
     }
 
+    /**@author zzzi
+     * @date 2024/3/4 15:07
+     * 这个方法完成了所有空bean的实例化，正常this::getBean会得到一个返回的bean，只是这里没有接收
+     * 单纯的利用getBean可以实例化bean的功能将所有的bean进行实例化
+     */
     @Override
     public void preInstantiateSingletons() throws BeansException {
         beanDefinitionMap.keySet().forEach(this::getBean);

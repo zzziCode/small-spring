@@ -32,7 +32,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
      */
     @Override
     public void registerBeanDefinition(String name, BeanDefinition beanDefinition) {
-    beanDefinitionMap.put(name,beanDefinition);
+        beanDefinitionMap.put(name,beanDefinition);
     }
 
     /**@author zzzi

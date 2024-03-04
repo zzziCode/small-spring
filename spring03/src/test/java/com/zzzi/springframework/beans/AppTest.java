@@ -10,17 +10,19 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
-/**@author zzzi
+/**
+ * @author zzzi
  * @date 2023/10/31 14:57
  * 在这里进行测试
  */
 public class AppTest {
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/10/31 15:08
      * 在这里测试新的bean工厂是否能够创建带参的bean对象
      */
     @Test
-    public void testBeanFactory(){
+    public void testBeanFactory() {
         // 1.初始化 BeanFactory
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
@@ -28,20 +30,22 @@ public class AppTest {
         BeanDefinition beanDefinition = new BeanDefinition(UserService.class);
         beanFactory.registerBeanDefinition("userService", beanDefinition);
 
-        // 4.获取bean，此时可以传递参数
-        //UserService userService = (UserService) beanFactory.getBean("userService", "小张",13);
-        //userService.queryUserInfo();
-        //System.out.println(userService);
+        // 4.获取bean，此时可以传递参数，且三种长度的参数都可以接收，这是因为有对应的构造函数
+        UserService userService = (UserService) beanFactory.getBean("userService", "小张",13);
+        userService.queryUserInfo();
+        System.out.println(userService);
 
         //UserService userService = (UserService) beanFactory.getBean("userService", "小王");
         //userService.queryUserInfo();
         //System.out.println(userService);
 
-        UserService userService = (UserService) beanFactory.getBean("userService");
-        userService.queryUserInfo();
-        System.out.println(userService);
+        //UserService userService = (UserService) beanFactory.getBean("userService");
+        //userService.queryUserInfo();
+        //System.out.println(userService);
     }
-    /**@author zzzi
+
+    /**
+     * @author zzzi
      * @date 2023/10/31 15:05
      * 在这里测试bean对象使用基本数据类型和包装类型为参数的区别
      * 使用基本类型无法匹配到正确的构造函数，因为传递13时内部的object数组会将13转换成Integer类型
@@ -49,8 +53,9 @@ public class AppTest {
      */
     @Test
     public void testObjectParam() {
-        Person person=new Person(13,"张三");
-        Object[] args=person.getArgs();
+        Person person = new Person(13, "张三");
+        //java底层做了转换，int转换成了Integer，String转换成了字符数组
+        Object[] args = person.getArgs();
         Constructor<?>[] declaredConstructors = Person.class.getDeclaredConstructors();
         for (Constructor<?> declaredConstructor : declaredConstructors) {
             Class<?>[] parameterTypes = declaredConstructor.getParameterTypes();
@@ -72,13 +77,14 @@ public class AppTest {
     }
 }
 
-class Person{
+class Person {
     private int age;
     private String name;
-    Object[] args=new Object[2];
+    Object[] args = new Object[2];
+
     public Person(int age, String name) {
-        args[0]=age;
-        args[1]=name;
+        args[0] = age;
+        args[1] = name;
         this.age = age;
         this.name = name;
     }

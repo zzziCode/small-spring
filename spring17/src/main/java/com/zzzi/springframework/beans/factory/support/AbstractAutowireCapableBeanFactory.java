@@ -46,7 +46,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
              * @date 2023/11/11 16:57
              * 为了引入AOP机制，在创建普通bean之前引入新的 一步
              */
-
+            //这里相当于调用无参构造函数创建一个空bean
             bean = createBeanInstance(beanDefinition, beanName, args);
             /**@author zzzi
              * @date 2023/11/16 20:03
@@ -63,11 +63,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             }
             /**@author zzzi
              * @date 2023/11/13 16:22
-             * 在这里新增一步，触发注解填充属性的功能
+             * 在这里新增一步，触发注解填充属性的功能，注解分为@Autowired和@Value
              */
             applyBeanPostProcessorsBeforeApplyingPropertyValues(beanName, bean, beanDefinition);
 
-            // 给 Bean 填充属性
+            // 给 Bean 填充属性，这一步就是正常的xml配置文件中配置的属性
             applyPropertyValues(beanName, bean, beanDefinition);
             // 执行 Bean 的初始化方法和 BeanPostProcessor 的前置和后置处理方法
             /**@author zzzi
@@ -88,7 +88,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
         /**@author zzzi
          * @date 2023/11/7 9:53
-         * 新增的判断逻辑
+         * 新增的判断逻辑，只有单例模式的bean对象才放进单例池中
+         * 原型模式的bean对象直接返回，每次都需要新建
          */
         Object exposedBean = bean;
         if (beanDefinition.isSingleton()) {
@@ -137,6 +138,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @author zzzi
      * @date 2023/11/13 16:25
      * 这是新增的一个方法，引入了注解属性填充的模块
+     * 主要是利用后置处理器的执行流程
      */
     private void applyBeanPostProcessorsBeforeApplyingPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
         for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
@@ -229,8 +231,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
 
+    /**
+     * @author zzzi
+     * @date 2023/12/8 19:44
+     * 属性填充时可能会出现类型转换的情况
+     */
     private void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
         try {
+            //得到所有需要填充的属性列表
             PropertyValues declaredPropertyValues = beanDefinition.getPropertyValues();
             PropertyValue[] propertyValues = declaredPropertyValues.getPropertyValues();
             for (PropertyValue propertyValue : propertyValues) {
@@ -240,17 +248,17 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 if (value instanceof BeanReference) {
                     BeanReference beanReference = (BeanReference) value;
                     value = getBean(beanReference.getBeanName());
-                /**@author zzzi
-                 * @date 2023/11/20 10:55
-                 * 属性填充更改
-                 */
+                    /**@author zzzi
+                     * @date 2023/11/20 10:55
+                     * 属性填充更改，在这里引入类型转换的服务
+                     */
                 } else {//普通属性需要先类型转换再进行属性填充
                     //得到两个属性
                     Class<?> sourceType = value.getClass();
                     Class<?> targetType = (Class<?>) TypeUtil.getFieldType(bean.getClass(), name);
                     //获取类型转换服务
                     ConversionService conversionService = getConversionService();
-                    if(conversionService!=null){
+                    if (conversionService != null) {
                         if (conversionService.canConvert(sourceType, targetType)) {
                             value = conversionService.convert(value, targetType);
                         }
@@ -295,11 +303,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             throw new BeansException("Invocation of init method of bean[" + beanName + "] failed", e);
         }
 
-        // 3. 执行 BeanPostProcessor After 处理，初始化之后的操作（AOP？？）
+        // 3. 执行 BeanPostProcessor After 处理，初始化之后的操作（AOP）
         wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
         return wrappedBean;
     }
 
+    /**@author zzzi
+     * @date 2023/12/12 13:34
+     * 配置这个，bean在创建的过程中会执行一些指定的操作
+     */
     private void invokeInitMethods(String beanName, Object wrappedBean, BeanDefinition beanDefinition) throws Exception {
         //1. 实现接口从而实现初始化方法
         if (wrappedBean instanceof InitializingBean)

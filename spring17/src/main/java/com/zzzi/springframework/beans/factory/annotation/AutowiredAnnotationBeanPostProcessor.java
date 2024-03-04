@@ -19,6 +19,11 @@ import java.lang.reflect.Field;
 public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
     private ConfigurableListableBeanFactory beanFactory;
 
+    /**@author zzzi
+     * @date 2023/12/17 21:14
+     * 依次判断属性上是否使用了@Value或者@Autowired注解
+     * 如果使用了，就进行相应的属性注入
+     */
     @Override
     public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
         //得到当前bean的真实类型（因为cglib继承了一次）
@@ -35,6 +40,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
             if (valueAnnotation != null) {
                 //拿到Value注解中占位符形式的字符串
                 String value = valueAnnotation.value();
+                //根据这个占位符中的名称从配置文件中拿到真正的值
                 value = beanFactory.resolveEmbeddedValue(value);
                 //得到占位符替换之后的真实值之后，直接属性填充
                 BeanUtil.setFieldValue(bean, field.getName(), value);

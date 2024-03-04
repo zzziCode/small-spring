@@ -15,6 +15,7 @@ public class DefaultResourceLoader implements ResourceLoader{
             try {
                 URL url=new URL(location);
                 return new UrlResource(url);
+                //传递的不是一个远程URL路径，此时就无法创建，报错之后就剩下第三种文件系统了
             } catch (MalformedURLException e) {
                 return new FileSystemResource(location);
             }

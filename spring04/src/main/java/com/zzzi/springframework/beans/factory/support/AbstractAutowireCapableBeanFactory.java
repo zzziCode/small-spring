@@ -24,14 +24,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
              * @date 2023/10/31 19:47
              * 在这里将创建bean和属性填充分开
              */
-            //创建空bean对象
+            //创建空bean对象，这里利用的是beanDefinition中的beanClass
             bean = createBeanInstance(beanName, beanDefinition, args);
-            //属性填充
+            //属性填充，这里利用的是beanDefinition中的propertyValues
             applyPropertyValues(beanName, bean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
-        //将创建得到的bean对象保存到IOC容器中并返回
+        //将创建得到的bean对象保存到IOC容器中并返回，这里默认bean是单例的
         addSingleton(beanName, bean);
         return bean;
     }
@@ -39,7 +39,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     /**
      * @author zzzi
      * @date 2023/10/31 19:54
-     * 获取一个bean对象,创建一个空bean
+     * 获取一个bean对象,创建一个空bean，这个方法后期只会创建出没有参数的空bean，因为这个方法的args一直为null
      */
     private Object createBeanInstance(String beanName, BeanDefinition beanDefinition, Object[] args) {
         //如果参数列表为空，直接调用实例化策略创建无参对象并返回
@@ -81,7 +81,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             PropertyValues definitionPropertyValues = beanDefinition.getPropertyValues();
             //如果当前bean没有属性列表，就不用填充
-            if(definitionPropertyValues==null)
+            if (definitionPropertyValues == null)
                 return;
             PropertyValue[] propertyValues = definitionPropertyValues.getPropertyValues();
             //遍历属性列表，进行属性填充

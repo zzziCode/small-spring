@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-    <bean id="userDao" class="com.zzzi.com.zzzi.com.zzzi.springframework.bean.UserDao"/>
-    <bean id="userService" class="com.zzzi.com.zzzi.com.zzzi.springframework.bean.UserService">
+    <bean id="userDao" class="com.zzzi.springframework.bean.UserDao"/>
+    <bean id="userService" class="com.zzzi.springframework.bean.UserService">
         <property name="uId" value="2"/>
         <property name="userDao" ref="userDao"/>
     </bean>

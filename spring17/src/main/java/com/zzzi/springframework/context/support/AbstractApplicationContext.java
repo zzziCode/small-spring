@@ -31,7 +31,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
     @Override
     public void refresh() throws BeansException {
-        // 1. 创建 BeanFactory，并加载 BeanDefinition
+        // 1. 创建 BeanFactory，并加载所有的BeanDefinition
         refreshBeanFactory();
 
         // 2. 获取 BeanFactory
@@ -69,9 +69,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     }
 
     private void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
-        if(beanFactory.containsBean("conversionService")){
+        if (beanFactory.containsBean("conversionService")) {
             Object conversionService = beanFactory.getBean("conversionService");
-            if(conversionService instanceof ConversionService)
+            if (conversionService instanceof ConversionService)
                 beanFactory.setConversionService((ConversionService) conversionService);
         }
         //将类型转换读取拿到之后，然后再进行bean的实例化
@@ -100,6 +100,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
     //保存实例化后的修改操作
     private void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+        //获取到所有的后置处理器
         Map<String, BeanPostProcessor> postProcessorMap = beanFactory.getBeansOfType(BeanPostProcessor.class);
         for (BeanPostProcessor postProcessor : postProcessorMap.values()) {
             beanFactory.addBeanPostProcessor(postProcessor);
@@ -157,6 +158,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         return getBeanFactory().getBeanDefinitionNames();
     }
 
+    /**
+     * @author zzzi
+     * @date 2023/12/12 21:34
+     * 下面的几个getBean的方法内部调用的是BeanFactory中的getBean方法
+     * 只是调用，没有自己的实现，相当于getBean方法的核心实现在BeanFactory中
+     */
     @Override
     public Object getBean(String name) throws BeansException {
         return getBeanFactory().getBean(name);
@@ -172,9 +179,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         return getBeanFactory().getBean(name, requiredType);
     }
 
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/11/13 16:12
-     * 新增一个按照类型获取bean的方法
+     * 新增一个按照类型获取bean的方法，调用别的方法，不是自己实现
+     * 内部调用getBeanFactory得到的是一个DefaultListableBeanFactory对象
+     * 内部有一个ioc容器
      */
     @Override
     public <T> T getBean(Class<T> requiredType) throws BeansException {

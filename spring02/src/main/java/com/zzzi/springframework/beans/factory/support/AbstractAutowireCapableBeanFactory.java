@@ -19,7 +19,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     protected Object createBean(String beanName, BeanDefinition beanDefinition) throws BeansException {
         Object bean;
         try {
-            //利用反射,根据传递来的类信息创建一个实例化对象
+            //利用反射,根据传递来的类信息创建一个实例化对象，此时相当于将bean的实例化交给了ioc容器
             bean = beanDefinition.getBeanClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw new BeansException("Instantiation of bean failed", e);

@@ -23,23 +23,26 @@ public class AppTest {
         //获取bean工厂
         DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
 
-        //注册UserDao的信息
+        //注册UserDao的信息，因为他也是一个bean
         BeanDefinition userDaoDefinition = new BeanDefinition(UserDao.class);
         //将注册信息保存到注册表中
-        factory.registerBeanDefinition("userDao",userDaoDefinition);
+        factory.registerBeanDefinition("userDao", userDaoDefinition);
 
         /**@author zzzi
-         * @date 2023/10/31 20:45
-         * 保存UserService的参数列表，便于后期属性填充
+         * @date 2023/10/31 20:45·
+         * 保存UserService的参数列表，便于后期属性填充，这一步正常情况下应该配置在xml文件中
+         * 然后读取xml配置文件自动得到属性列表
          */
-        PropertyValues propertyValues=new PropertyValues();
-        propertyValues.addPropertyValue(new PropertyValue("id",2));
-        propertyValues.addPropertyValue(new PropertyValue("userDao",new BeanReference("userDao")));
+        PropertyValues propertyValues = new PropertyValues();
+        //普通属性直接填充值，bean属性需要使用BeanReference来标记
+        propertyValues.addPropertyValue(new PropertyValue("id", 2));
+        //这一句代表当前的bean内部有个名为userDao的属性，其本身是一个bean，名称叫做userDao
+        propertyValues.addPropertyValue(new PropertyValue("userDao", new BeanReference("userDao")));
 
         //注册UserService的信息
-        BeanDefinition userServiceDefinition = new BeanDefinition(UserService.class,propertyValues);
+        BeanDefinition userServiceDefinition = new BeanDefinition(UserService.class, propertyValues);
         //将注册信息保存到注册表中
-        factory.registerBeanDefinition("userService",userServiceDefinition);
+        factory.registerBeanDefinition("userService", userServiceDefinition);
 
 
         //获取对应的bean

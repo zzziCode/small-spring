@@ -16,10 +16,16 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
     @Override
     protected void refreshBeanFactory() throws BeansException {
         DefaultListableBeanFactory beanFactory = createBeanFactory();
+        //经历这一步的beanFactory已经有了配置文件中注册的bean定义信息
         loadBeanDefinitions(beanFactory);
         this.beanFactory = beanFactory;
     }
 
+    /**@author zzzi
+     * @date 2024/3/4 14:57
+     * 这个方法就是让子类的api与之前读取配置文件的api名称一样
+     * 子类实现这个方法，内部调用之前读取配置文件的api完成配置文件的解析
+     */
     protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory);
 
     private DefaultListableBeanFactory createBeanFactory() {

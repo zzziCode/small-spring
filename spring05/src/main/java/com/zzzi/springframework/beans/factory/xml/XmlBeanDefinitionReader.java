@@ -27,6 +27,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         super(beanDefinitionRegistry, resourceLoader);
     }
 
+    /**@author zzzi
+     * @date 2024/3/4 13:20
+     * 不管是传递的路径还是资源文件对象，最终都会经过这个方法，最终调用doLoadBeanDefinitions
+     */
     @Override
     public void loadBeanDefinitions(Resource resource) throws BeansException {
         try (
@@ -45,6 +49,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         }
     }
 
+    /**@author zzzi
+     * @date 2024/3/4 13:21
+     * 传递的是字符串，就要先得到解析字符串的资源加载器从而得到字符串对应的资源
+     * 之后将这个资源中的内容读取出来
+     */
     @Override
     public void loadBeanDefinitions(String location) throws BeansException {
         ResourceLoader resourceLoader = getResourceLoader();

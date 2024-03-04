@@ -20,6 +20,7 @@ public class AppTest {
      * @date 2023/11/3 15:12
      * 调用原始的DefaultListableBeanFactory核心类，然后手动控制修改逻辑的执行
      * 这种方式需要手动控制，因为spring.xml文件中并没有将修改策略定义成bean
+     * 所以需要手动控制实例化前后的修改逻辑的执行顺序
      */
     @Test
     public void testBeanFactoryPostProcessorAndBeanPostProcessor() {
@@ -30,19 +31,29 @@ public class AppTest {
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
         reader.loadBeanDefinitions("classpath:spring.xml");
 
-        //3. 创建一个实例化前的修改策略并直接执行
+        /**@author zzzi
+         * @date 2024/3/4 15:27
+         * 下面两个修改逻辑正常来说应该保存到ioc容器中，但是这里是测试功能是否正常
+         * 所以手动控制
+         */
+        //3. 创建一个实例化前的修改策略并直接执行（这里与beanPostProcessor不同）
         MyBeanFactoryPostProcessor factoryPostProcessor = new MyBeanFactoryPostProcessor();
         factoryPostProcessor.postProcessBeanFactory(beanFactory);
 
-        //4. 创建一个实例化后的修改策略并加入容器中
+        //4. 创建一个实例化后的修改策略并加入容器中（不直接执行）
         MyBeanPostProcessor postProcessor = new MyBeanPostProcessor();
         beanFactory.addBeanPostProcessor(postProcessor);
 
         //5. 获取bean对象，此时经历三步：
-        //1. 创建空bean
-        //2. 属性填充
-        //3. 执行实例化后的修改策略
+        //5.1. 创建空bean
+        //5.2. 属性填充
+        //5.3. 执行实例化后的修改策略
         UserService userService = beanFactory.getBean("userService", UserService.class);
+        //结果为：UserService{uId='1', company='实例化前改为：字节跳动', location='实例化后改为：北京', userDao={1=张三, 2=李四, 3=王五}}
+        //其中company的属性是在未实例化前修改的PropertyValues列表实现的
+        //其中location是在实例化之后直接调用bean的set方法修改的
+        //userDao是在userService属性填充的过程中创建的
+        //userDao的创建过程也去匹配了实例化后的修改逻辑，但是没有匹配上，所以正常创建
         System.out.println(userService);
     }
 

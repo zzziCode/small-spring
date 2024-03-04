@@ -18,7 +18,7 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition("userService");
         PropertyValues propertyValues = beanDefinition.getPropertyValues();
-        //增加一个字段
-        propertyValues.addPropertyValue(new PropertyValue("company", "改为：字节跳动"));
+        //修改一个字段
+        propertyValues.addPropertyValue(new PropertyValue("company", "实例化前改为：字节跳动"));
     }
 }

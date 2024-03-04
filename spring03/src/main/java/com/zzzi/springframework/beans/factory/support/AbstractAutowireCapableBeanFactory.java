@@ -13,7 +13,7 @@ import java.lang.reflect.Constructor;
  * 这里只关注如何创建带参的bean对象，主要是引入了一个实例化策略模块，利用他们提供的接口创建对应的bean对选哪个
  */
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
-    //保存一个成员变量，来指定当前使用什么实例化策略
+    //保存一个成员变量，来指定当前使用什么实例化策略，现在项目中默认使用的是cglib来创建bean对象
     private InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
 
     /**
@@ -26,6 +26,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     protected Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException {
         Object bean = null;
         try {
+            //调用这个方法创建带参的bean对象，这里在创建bean时就直接填充参数，正常应该是创建一个空的bean，然后进行属性填充
             bean = createBeanInstance(beanDefinition, beanName, args);
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", (ReflectiveOperationException) e);
@@ -50,7 +51,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         //在这里说明需要创建带参bean对象
         //1.尝试找到目标构造函数
         Constructor constructorToUse = null;
-
+        /**@author zzzi
+         * @date 2024/3/3 14:51
+         * 根据参数列表找到匹配的构造函数，从而完成带参bean的创建
+         */
         //获取bean对象的类信息
         Class beanClass = beanDefinition.getBeanClass();
         //获取到这个bean对象的所有构造函数
@@ -75,7 +79,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 break;
             }
         }
-        //在这里创建带参的bean对象
+        //在这里创建带参的bean对象，实例化策略不同，从而使用不同的方法(jdk反射或者cglib字节码)
         return getInstantiationStrategy().instantiate(beanDefinition, beanName, constructorToUse, args);
     }
 

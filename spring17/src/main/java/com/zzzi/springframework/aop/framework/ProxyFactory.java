@@ -21,6 +21,11 @@ public class ProxyFactory {
         return proxyObject;
     }
 
+    /**@author zzzi
+     * @date 2023/12/12 13:57
+     * 创建的代理对象内部保存了一个advisedSupport中的targetSource属性
+     * targetSource属性内部保存了一个target，这是最终被代理的对象
+     */
     private AopProxy createProxy() {
         if(advisedSupport.isProxyTargetClass()){
             return new Cglib2AopProxy(advisedSupport);

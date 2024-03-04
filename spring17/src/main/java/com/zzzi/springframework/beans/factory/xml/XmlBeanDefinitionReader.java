@@ -49,6 +49,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
      * @author zzzi
      * @date 2023/11/4 14:53
      * 将四种loadBeanDefinitions方法的执行整合到这一个方法中执行
+     * 在这里实现对配置文件中所有的配置项进行读取并保存到BeanDefinition中的操作
      */
     protected void doLoadBeanDefinitions(InputStream inputStream) throws ClassNotFoundException, DocumentException {
         SAXReader reader = new SAXReader();
@@ -126,7 +127,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         }
     }
 
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/11/12 15:09
      * 在xml文件读取中加入这个方法就引入了自动注册的模块
      */

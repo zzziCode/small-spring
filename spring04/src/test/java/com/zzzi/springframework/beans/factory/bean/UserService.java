@@ -9,6 +9,8 @@ public class UserService {
     private int id;
     private UserDao userDao;
 
+    //这个方法中可以操作userDao中的map
+    //这意味着属性填充一个bean成功
     public void query() {
         System.out.println("查询用户信息：" + userDao.query(id));
     }

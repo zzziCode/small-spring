@@ -29,7 +29,7 @@ public class PropertyValues {
 
     //获取所有属性对
     public PropertyValue[] getPropertyValues() {
-        //直接将List中的元素放到一个指定的数组中返回
+        //直接将List中的元素放到一个指定的数组中返回，而不是返回一个List
         return propertyValueList.toArray(new PropertyValue[propertyValueList.size()]);
     }
 }

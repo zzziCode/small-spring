@@ -109,13 +109,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
         return wrappedBean;
     }
-
+    /**@author zzzi
+     * @date 2024/3/4 14:35
+     * 这个方法后期会执行一些初始化的工作
+     */
     private void invokeInitMethods(String beanName, Object wrappedBean, BeanDefinition beanDefinition) {
     }
 
     /**@author zzzi
      * @date 2023/11/3 12:39
-     * 执行实例化后的修改逻辑
+     * 执行实例化后的修改逻辑，之后会执行一个初始化的工作，初始化之后还会调用一个初始化后的逻辑
      */
     @Override
     public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) throws BeansException {

@@ -16,7 +16,7 @@ import java.util.Map;
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
     @Override
     public void refresh() throws BeansException {
-        //1.创建beanFactory
+        //1.创建beanFactory，主要是创建一个beanFactory然后将配置文件中的信息读取到其中
         refreshBeanFactory();
 
         //2.获取beanFactory
@@ -26,7 +26,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
          * @date 2023/11/3 13:20
          * 上面两步相当与得到了beanFactory对象，并且从配置文件中得到了注册信息
          */
-        //3.实例化之前执行修改操作
+        //3.实例化之前执行修改操作，在这里要传入beanFactory，有两个目的
+        // 3.1. 从beanFactory中获取到实例化前修改逻辑的bean
+        // 3.2. 实例化前修改逻辑执行的过程中也需要这个beanFactory
         invokeBeanFactoryPostProcessors(beanFactory);
 
         //4.保存实例化之后的修改操作
@@ -38,7 +40,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
     /**@author zzzi
      * @date 2023/11/3 13:00
-     * 保存实例化后的修改操作
+     * 保存实例化后的修改操作，这一步也会将实例化后的修改逻辑的bean创建出来并保存
      */
     protected void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory){
         Map<String, BeanPostProcessor> postProcessorMap = beanFactory.getBeansOfType(BeanPostProcessor.class);
@@ -49,9 +51,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
     /**@author zzzi
      * @date 2023/11/3 13:00
-     * 执行实例化前的修改操作
+     * 执行实例化前的修改操作，由于实例化前的修改类都注册成了bean
+     * 所以可以通过类型直接获取到bean，之后触发方法的实现
      */
     private void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+        //这一步会将实例化前的修改逻辑类中的bean创建出来
         Map<String, BeanFactoryPostProcessor> factoryPostProcessorMap = beanFactory.getBeansOfType(BeanFactoryPostProcessor.class);
         for (BeanFactoryPostProcessor factoryPostProcessor : factoryPostProcessorMap.values()) {
             factoryPostProcessor.postProcessBeanFactory(beanFactory);

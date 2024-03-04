@@ -22,6 +22,7 @@ public class ConversionServiceFactoryBean implements FactoryBean, InitializingBe
     @Nullable
     private GenericConversionService conversionService;
 
+    //从中得到一个真正的bean对象，bean的复杂创建过程从xml文件中转换到了java代码中
     @Override
     public Object getObject() throws Exception {
         return conversionService;
