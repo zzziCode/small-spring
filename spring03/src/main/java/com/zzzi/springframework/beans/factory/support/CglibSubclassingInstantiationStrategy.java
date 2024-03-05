@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
  * @author zzzi
  * @date 2023/10/31 14:03
  * 第二种实例化bean对象的策略：利用字节码来创建bean对象
+ * 这是相比于上一节新添加的方式
  */
 public class CglibSubclassingInstantiationStrategy implements InstantiationStrategy {
 
