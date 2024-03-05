@@ -18,7 +18,7 @@ public class AppTest
 {
     @Test
     public void testXml() {
-        // 1.初始化 BeanFactory
+        // 1.初始化 BeanFactory，传入这个xml文件可以测试实例化后的两个方法与初始化方法的执行先后顺序
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:springPostProcessor.xml");
         //2. 注册钩子函数，容器关闭时触发，此时会触发bean的销毁逻辑
         applicationContext.registerShutdownHook();

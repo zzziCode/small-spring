@@ -19,7 +19,7 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition("userService");
         PropertyValues propertyValues = beanDefinition.getPropertyValues();
-        //增加一个字段
+        //增加一个字段，覆盖原有的旧字段
         propertyValues.addPropertyValue(new PropertyValue("company", "改为：字节跳动"));
     }
 }

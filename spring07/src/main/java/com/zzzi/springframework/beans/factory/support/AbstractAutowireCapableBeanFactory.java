@@ -33,7 +33,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         Object bean = null;
         try {
             bean = createBeanInstance(beanDefinition, beanName, args);
-            // 给 Bean 填充属性
+            // 给 Bean 填充属性，根据beanDefinition中的信息填充
             applyPropertyValues(beanName, bean, beanDefinition);
             // 执行 Bean 的初始化方法和 BeanPostProcessor 的前置和后置处理方法
             /**@author zzzi
@@ -61,7 +61,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             /**@author zzzi
              * @date 2023/11/3 19:50
              * 将实现接口从而编写注册和销毁的方式，以及配置文件中指定注册和销毁的方式
-             * 这两种整合到一起
+             * 这两种整合到一起，这样才能统一进行处理
              */
             registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName, beanDefinition));
         }

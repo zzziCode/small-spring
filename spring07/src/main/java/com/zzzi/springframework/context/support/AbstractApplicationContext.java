@@ -35,6 +35,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     }
 
     //保存实例化后的修改操作
+    /**@author zzzi
+     * @date 2024/3/5 14:33
+     * 按照类型获取到所有的实例化后修改逻辑的bean，之后将其保存到容器中，在bean实例化后触发
+     */
     private void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
         Map<String, BeanPostProcessor> postProcessorMap = beanFactory.getBeansOfType(BeanPostProcessor.class);
         for (BeanPostProcessor postProcessor : postProcessorMap.values()) {
@@ -51,7 +55,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
     /**@author zzzi
      * @date 2023/11/3 18:40
-     * 这个钩子函数注册了一个销毁的时机，在虚拟机退出之前执行销毁的逻辑
+     * 这个钩子函数注册了一个JVM关闭钩子，在虚拟机退出之前调用close方法，内部触发销毁逻辑的执行
      */
     @Override
     public void registerShutdownHook() {
@@ -63,6 +67,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         });
     }
 
+    /**@author zzzi
+     * @date 2024/3/5 14:39
+     * 钩子函数中调用close方法，内部真正调用的是destroySingletons方法
+     * 这个方法内部遍历保存销毁逻辑的Map，然后调用每一个销毁逻辑的destroy方法
+     * 内部执行接口形式或者xml配置文件形式的销毁逻辑
+     */
     @Override
     public void close() {
         getBeanFactory().destroySingletons();

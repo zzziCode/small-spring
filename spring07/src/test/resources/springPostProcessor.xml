@@ -12,6 +12,7 @@
 
     <!--因为注册了这两个对bean进行修改的类，所以读取配置也就是在读取配置文件时文件时会自动实现bean的修改-->
     <!--这种自定义的修改类被注册成了bean，，会将其读取到BeanDefinition中-->
+    <!--并且在这个文件中还定义了初始化和销毁逻辑，于是可以看出实例化后的两个方法和初始化方法的执行顺序-->
     <bean class="com.zzzi.springframework.common.MyBeanPostProcessor"/>
     <bean class="com.zzzi.springframework.common.MyBeanFactoryPostProcessor"/>
 

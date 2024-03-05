@@ -79,7 +79,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             BeanDefinition beanDefinition = new BeanDefinition(clazz);
             /**@author zzzi
              * @date 2023/11/3 18:51
-             * 如果是配置文件中配置好了标签，那么就在这里将其保存到bean的定义中
+             * 如果是配置文件中配置好了标签，那么就在这里将其保存到bean的定义中，没有配置的话，set方法调用设置的是""
              */
             beanDefinition.setInitMethodName(initMethod);
             beanDefinition.setDestroyMethodName(destroyMethodName);
