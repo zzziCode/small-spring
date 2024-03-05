@@ -14,6 +14,10 @@ import java.util.Map;
  * 为了获取资源加载器
  */
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
+    /**@author zzzi
+     * @date 2024/3/5 16:38
+     * 这个方法将所有的内容进行整合
+     */
     @Override
     public void refresh() throws BeansException {
         //1.创建beanFactory，主要是创建一个beanFactory然后将配置文件中的信息读取到其中
