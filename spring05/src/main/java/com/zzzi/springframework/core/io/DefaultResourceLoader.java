@@ -4,7 +4,10 @@ import cn.hutool.core.lang.Assert;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
+/**@author zzzi
+ * @date 2024/3/5 16:40
+ * 在这里获取默认的资源加载器，之后用这个资源加载器加载配置文件，自动化完成bean的注册
+ */
 public class DefaultResourceLoader implements ResourceLoader{
     @Override
     public Resource getResource(String location) {
