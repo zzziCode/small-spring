@@ -113,7 +113,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
         /**@author zzzi
          * @date 2023/11/6 15:52
-         * 在这里增加一个容器资源注入的操作
+         * 在这里增加一个容器资源注入的操作，这里不注入应用上下文的资源，因为
          */
         // 1. 容器资源直接注入
         if(bean instanceof BeanFactoryAware){

@@ -14,7 +14,7 @@ import org.junit.Test;
 public class AppTest {
 
     @Test
-    public void shouldAnswerWithTrue() {
+    public void testResourcesInject() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
         applicationContext.registerShutdownHook();
 

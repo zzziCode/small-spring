@@ -56,19 +56,19 @@ math: mathjax
 
 >🍍 small_spring08
 
-在上一节中，我们在原有项目的基础上增加了初始化和销毁模块，并且实现方式有两种，分别是xml配置和实现接口，在初始化和销毁时可以进行资源的管理。本节中我们进一步**扩展**bean的功能，使其可以获取到spring中的一些容器资源，为了获得这些容器资源，需要一些成员变量接收，然后在生命周期中增加这些变量的注入代码，最后bean对象就可以使用这些容器资源了，具体的代码我放到了[仓库](https://github.com/zzziCode/small-spring)中
+在上一节中，我们在原有项目的基础上增加了初始化和销毁模块，并且实现方式有两种，分别是xml配置和实现接口，在初始化和销毁时可以进行资源的管理。本节中我们进一步**扩展**bean的功能，使其可以获取到spring中的一些容器资源，为了获得这些容器资源，需要一些成员变量接收，然后在生命周期中增加这些变量的注入代码，最后bean对象就可以使用这些容器资源了，具体的代码我放到了[仓库](https://github.com/zzziCode/small-spring)中，<u>重点关注各种Aware的资源注入时机以及相对于初始化逻辑的执行先后顺序</u>，但是需要明确一点，这些容器资源都需要注入成为bean的属性，所以要在bean实例化之后才逐渐注入，**亮点**就是将`ApplicationContext`的注入延后，使得所有容器资源的注入变得统一，为了延后就需要保存`ApplicationContext`，所以注册了一个`ApplicationContextAwareProcessor`后置处理器
 
 <!--more-->
 
 ## 原因
 
-​		之前几节中已经将项目的功能一步步的扩充了，这些功能分别是bean的定义，注册，属性填充，xml文件配置，应用上下文，修改，初始化和销毁。这些功能使得现在的简易spring框架更加完善，但是这些功能并没有增强bean本身的能力。当bean想要使用spring的一些容器资源，例如bean内部想要使用类加载器，想要获得应用上下文，从而知道总共有哪些bean等操作、现有的spring框架还无能为力，所以本节中重点解决的就是如何让bean本身能够获得spring的**容器资源**
+​		之前几节中已经将项目的功能一步步的扩充了，这些功能分别是bean的定义，注册，属性填充，xml文件配置，应用上下文，修改，初始化和销毁。这些功能使得现在的简易spring框架更加完善，但是这些功能并没有增强bean本身的能力。当bean想要使用spring的一些**容器资源**，例如bean内部想要使用类加载器，想要获得应用上下文，从而知道总共有哪些bean等操作、现有的spring框架还无能为力，所以本节中重点解决的就是如何让bean本身能够获得spring的**容器资源**，并且是想要时才给他，并不是一股脑的将所有的资源给每一个bean，这样会造成bean过于臃肿
 
-​		对于每一个bean来说，其想要使用的spring容器资源是不同的，所以不能统一的将所有的容器资源给每一个bean，而是转换思维，利用之前的思路，spring提供一个接口，然后谁实现这个接口，谁就有了对应的功能。这里也是一样，想要使用什么容器资源，就实现什么接口，接口内部提供一个set方法，这样就可以在合适的地方调用bean内部的这个set方法完成set注入，例如：
+​		对于每一个bean来说，其想要使用的spring容器资源是不同的，所以不能统一的将所有的容器资源给每一个bean，而是转换思维，利用之前的思路，spring提供一个接口，然后谁实现这个接口，谁就有了对应的功能。这里也是一样，想要使用什么容器资源，就实现什么接口，接口内部提供一个set方法，这样就可以在合适的地方调用bean内部的这个set方法完成set资源注入，例如：
 
 ![image-20231106140004209](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526668.png)
 
-​		spring提供这样一个接口，实现这个接口的bean对象必须实现`setBeanName`方法，从而在合适的地方既可以将`BeanName`注入给bean。这样的接口有很多，本项目中提供四种接口，分别是：`ApplicationContextAware`，`BeanFactoryAware`，`BeanClassLoaderAware`，`BeanNameAware`，不同的bean可以继承不同的接口实现**各取所需**的效果。
+​		spring提供这样一个接口，实现这个接口的bean对象必须实现`setBeanName`方法，从而在合适的地方就可以将`BeanName`注入给bean。这样的接口有很多，本项目中提供四种接口，分别是：`ApplicationContextAware`，`BeanFactoryAware`，`BeanClassLoaderAware`，`BeanNameAware`，不同的bean可以继承不同的接口实现**各取所需**的效果。
 
 ​		扩充bean自身功能之后，项目的框架变为：
 
@@ -86,17 +86,17 @@ math: mathjax
 
    ![image-20231106141119361](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526670.png)
 
-   `UserService`中想要使用四个容器资源，那么就需要按照统一的设计方式，实现接口，定义成员属性，重写set方法。
+   `UserService`中想要使用四个容器资源，那么就需要按照统一的设计方式，实现接口，定义成员属性，重写set方法。现在的重点是明确这些容器资源的注入时机
 
 4. spring在**合适的时机**将容器资源通过实现的set方法注入进bean内部，之后bean就可以使用这些资源了
 
-​		为了注入这些容器资源，需要找到一个合适的时机统一注入，而这个注入时机spring选择在了实例化后修改bean属性的时候。因为这些容器资源不经过xml文件的配置，所以经过实例化后，bean的一些基础属性都填充好了，而这些容器资源的注入也可以看做是修改，所以将这个注入时机放到了实例化后的修改操作当中，也就是`initializeBean`中。
+​		为了注入这些容器资源，需要找到一个合适的时机统一注入，而这个注入时机spring选择在了**实例化后修改bean属性**的时候。因为这些容器资源不经过xml文件的配置，所以经过实例化后，bean的一些基础属性都填充好了，而这些容器资源的注入也可以看做是bean的属性注入，所以将这个注入时机放到了实例化后的修改操作当中，也就是`initializeBean`中。
 
-​		针对不同的容器资源，存在的时机又是不同的，有可能在`initializeBean`注入容器资源的时候，在这里获取不到目标容器资源，例如`ApplicationContext` 的获取并不能直接在创建 Bean 时候就可以拿到，所以需要在 `refresh` 操作时，把 `ApplicationContext` 写入到一个包装的 `BeanPostProcessor` 中的实现类中去，之后将其封装成修改策略来执行，内部简单调用set方法即可，具体的注入流程如下：
+​		针对不同的容器资源，存在的时机又是不同的，有可能在`initializeBean`注入容器资源的时候，<u>在这里获取不到目标容器资源</u>，例如`ApplicationContext` 的获取并不能直接在创建 Bean 时候就可以拿到，所以需要在 `refresh` 操作时，把 `ApplicationContext` 写入到一个包装的 `BeanPostProcessor` 中的实现类中去，之后将其封装成修改策略来执行，内部简单调用set方法即可，也就是说`ApplicationContext`的注入时机与其他的容器资源注入时机不一样，需要将其放在一个bean的后置处理器中触发之后才会完成注入，具体的注入流程如下：
 
 <img src="https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526671.png" alt="image-20231106143230830" style="zoom:67%;" />
 
-​		上面的容器资源注入流程中，只有一个特殊的`ApplicationContext` 注入时有一些区别，因为他在`initializeBean`中已经获取不到了，所以只能在其还存在时保存住，然后在最后统一注入，为了保存`ApplicationContext` ，定义了一个包装处理器，也就是一个实例化后的修改逻辑，在内部就是调用set方法来注入`ApplicationContext` 资源，其余的容器资源直接注入即可
+​		上面的容器资源注入流程中，只有一个**特殊**的`ApplicationContext` 注入时有一些区别，因为他在`initializeBean`中已经获取不到了，**所以只能在其还存在时保存住**，也就是在refresh方法时就保存住，保存的方法就是将其包装成一个Bean的后置处理器，这样在资源的注入就可以统一在最后统一注入，其余的容器资源直接注入即可，相当于其余的容器资源直接在initializeBean方法中直接调用set方法注入，但是由于initializeBean方法中获取不到ApplicationContext，所以先保存。又为了统一资源的注入时机，所以将其注册成一个bean的后置处理器
 
 ​		为了实现容器资源的注入，项目中新增了一些类，修改了一些类，下面详细介绍这些类的变化：
 
@@ -122,7 +122,7 @@ math: mathjax
 
    ![image-20231106144247248](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526676.png)
 
-6. `ApplicationContextAwareProcessor`：为了保存应用上下文的容器资源，最后统一注册而添加的包装处理器，是一个实例化后修改的策略类，内部实例化修改就是使用set方法来注入应用上下文接口：
+6. `ApplicationContextAwareProcessor`：为了**保存**（主要是在还能访问`ApplicationContext`时保存）应用上下文的容器资源，最后统一注册时机而添加的包装处理器，是一个实例化后修改的策略类，内部实例化修改就是使用set方法来注入应用上下文接口：
 
    ![image-20231106144425361](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526677.png)
 
@@ -130,7 +130,7 @@ math: mathjax
 
 #### 修改的类
 
-1. `AbstractApplicationContext`：修改了refresh方法，增加了一步，单独保存一个`ApplicationContextAwareProcessor`对象，并且利用构造函数保存当前的应用上下文，目的是为了将应用上下文的注入操作延后，与其他注入操作统一到一起：
+1. `AbstractApplicationContext`：修改了refresh方法，增加了一步，**单独保存**一个`ApplicationContextAwareProcessor`对象，**并且利用构造函数保存当前的应用上下文**，目的是为了将应用上下文的注入操作**延后**，与其他注入操作**统一**到一起：
 
    ```java
    @Override
@@ -159,7 +159,7 @@ math: mathjax
 
    ![image-20231106153835057](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061538272.png)
 
-3. `AbstractAutowireCapableBeanFactory`：修改了`initializeBean`方法，在这里统一执行容器资源注入的方式，分别调用不同的set方法来注入，由于使用了`instanceof`，谁实现了对应的容器资源接口谁就能完成注入
+3. `AbstractAutowireCapableBeanFactory`：修改了`initializeBean`方法，在这里**统一执行容器资源注入**，分别调用不同的set方法来注入，由于使用了`instanceof`，谁实现了对应的容器资源接口谁就能完成注入对应的容器资源
 
    ```java
    private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
@@ -195,9 +195,9 @@ math: mathjax
 
 ​		在这里完成了容器资源的统一注入，对于`BeanFactoryAware`，`BeanFactoryAware`，`BeanNameAware` 来说，可以直接注入，所以谁需要谁就直接注入，是否需要通过`instanceof`来判断，只要实现了对应的接口，spring就认为这个bean需要对应的容器资源
 
-​		对于 `ApplicationContextAware` 来说，无法在这里统一注入，因为这里无法直接获取到`ApplicationContext`，所以在前面能够获取到`ApplicationContext`的地方，将其放到了一个包装处理器中的成员属性当中，这个包装处理器就是一个实例化后的修改逻辑，其修改逻辑就是调用set属性将容器资源注入。在refresh方法中被保存到了实例化后修改逻辑的容器中之后，然后在`initializeBean`中会被调用，从而出发set的容器资源注入，也就完成了统一的容器资源注入
+​		对于 `ApplicationContextAware` 来说，**无法在这里统一注入**，因为这里无法直接获取到`ApplicationContext`，所以在前面能够获取到`ApplicationContext`的地方，将其放到了一个包装处理器中的成员属性当中，这个包装处理器就是一个实例化后的修改逻辑，其修改逻辑就是调用set属性将容器资源注入。在refresh方法中被保存到了实例化后修改逻辑的容器中之后，然后在`initializeBean`中会被调用，从而出发set的容器资源注入，也就完成了统一的容器资源注入
 
-​		所以总结来说，注入的方式有两种，形式是统一的：
+​		所以总结来说，**注入的方式有两种**，形式是统一的：
 
 1. 直接注入容器资源，因为可以直接获取到
 
@@ -228,37 +228,39 @@ math: mathjax
    > ```java
    > @Override
    > public void refresh() throws BeansException {
-   >     // 1. 创建 BeanFactory，并加载 BeanDefinition
-   >     refreshBeanFactory();
+   >  // 1. 创建 BeanFactory，并加载 BeanDefinition
+   >  refreshBeanFactory();
    > 
-   >     // 2. 获取 BeanFactory
-   >     ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+   >  // 2. 获取 BeanFactory
+   >  ConfigurableListableBeanFactory beanFactory = getBeanFactory();
    > 
-   >     // 3. 添加 ApplicationContextAwareProcessor，让继承自 ApplicationContextAware 的 Bean 对象都能感知所属的 ApplicationContext
-   >     beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+   >  // 3. 添加 ApplicationContextAwareProcessor，让继承自 ApplicationContextAware 的 Bean 对象都能感知所属的 ApplicationContext
+   >  beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
    > 
-   >     // 4. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (Invoke factory processors registered as beans in the context.)
-   >     invokeBeanFactoryPostProcessors(beanFactory);
+   >  // 4. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (Invoke factory processors registered as beans in the context.)
+   >  invokeBeanFactoryPostProcessors(beanFactory);
    > 
-   >     // 5. BeanPostProcessor 需要提前于其他 Bean 对象实例化之前执行注册操作
-   >     registerBeanPostProcessors(beanFactory);
+   >  // 5. BeanPostProcessor 需要提前于其他 Bean 对象实例化之前执行注册操作
+   >  registerBeanPostProcessors(beanFactory);
    > 
-   >     // 6. 提前实例化单例Bean对象
-   >     beanFactory.preInstantiateSingletons();
+   >  // 6. 提前实例化单例Bean对象
+   >  beanFactory.preInstantiateSingletons();
    > }
    > ```
+   >
+   > 这里的第三步是为了将`ApplicationContext`的注入**延后**，使得容器资源注入的时机统一到`initializeBean`方法中，只不过`ApplicationContext`是在`initializeBean`方法中的后置处理器的`postProcessBeforeInitialization`方法中完成注入，其余的资源直接在`initializeBean`完成注入
 
 3. 创建`beanFactory`并获取，这不是本节中的重点：
 
    ![image-20231106150751741](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526679.png)
 
-4. 保存应用上下文的容器资源到一个**包装处理器**当中，其实就是一个实例化后的修改逻辑对象，通过构造函数保存当前这个容器资源：
+4. **保存**应用上下文的容器资源到一个**包装处理器**当中，其实就是一个实例化后的修改逻辑对象，通过构造函数保存当前这个容器资源：
 
    ![image-20231106150854564](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526680.png)
 
    ![image-20231106150943526](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526681.png)
 
-   可以看出，通过构造函数保存之后，类中的成员变量就是对应的容器资源，其中实例化后的修改逻辑就是调用set方法完成容器资源的注入，只需要在合适的时机触发这个方法执行即可
+   可以看出，通过构造函数保存之后，类中的成员变量就是对应的容器资源，其中实例化后的修改逻辑就是调用set方法完成容器资源的注入，只需要在合适的时机触发这个方法执行就可以将refresh中保存的`applicationContext`注入
 
 5. 执行实例化前的修改，保存实例化后的修改，这不是本项目中的重点：
 
@@ -274,13 +276,15 @@ math: mathjax
 
      ![image-20231106151509151](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526682.png)
 
-   - 无法直接注入的容器资源，触发修改逻辑，在修改逻辑中完成注入
+   - 无法直接注入的容器资源，触发修改逻辑，也就是触发实例化后初始化前的`postProcessBeforeInitialization`方法执行，在修改逻辑中完成注入
 
      ![image-20231106151705127](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526683.png)
 
-8. 执行`invokeInitMethods`中的初始化方法，以及其他一些处理，完成bean的创建，此时就可以利用容器中的bean对象执行一些业务了
+     资源完成注入之后为：
 
-![image-20231106152036704](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526684.png)
+     ![image-20231106152036704](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526684.png)
+
+8. 执行`invokeInitMethods`中的初始化方法，以及其他一些处理，完成bean的创建，此时就可以利用容器中的bean对象执行一些业务了
 
 最终的执行结果如下，发现即使xml文件中不配置这些容器资源，也能完成注入：
 
@@ -293,3 +297,5 @@ math: mathjax
 ![spring-9-02](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311061526685.png)
 
 ​		其中四个资源接口实现了一个统一的`Aware`接口，然后对于不能直接注入的应用上下文资源，在refresh方法中封装到了一个包装处理器的实例化后修改逻辑中，对于能直接注入的资源，直接在`AbstractAutowireCapableBeanFactory`类的`initializeBean`方法中完成注入
+
+​		针对上面的分析，**得到各种容器资源的注入时机为**`initializeBean`方法中完成资源的注入，有一个`ApplicationContext`的注入有一些特殊，不是直接调用set方法，而是在`initializeBean`方法中调用bean的后置处理器，这样做的原因是因为在`initializeBean`方法中已经获取不到`ApplicationContext`，只能在还能获取`ApplicationContext`的时候就将其保存住，又为了统一容器资源注入的时机，所以将其注册成了一个**后置处理器**，之后就可以统一在`initializeBean`方法中完成资源的注入

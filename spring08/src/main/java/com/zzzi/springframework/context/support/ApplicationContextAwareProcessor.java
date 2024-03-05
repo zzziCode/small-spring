@@ -19,7 +19,8 @@ public class ApplicationContextAwareProcessor implements BeanPostProcessor {
 
     /**@author zzzi
      * @date 2023/11/6 15:48
-     * 触发这个修改逻辑，自动完成容器资源的注入
+     * 触发这个修改逻辑，自动完成容器资源的注入,也就是在初始化方法执行之前注入
+     * 注入的applicationContext是在refresh方法中就保存的资源
      */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {

@@ -9,7 +9,8 @@ import com.zzzi.springframework.core.io.DefaultResourceLoader;
 
 import java.util.Map;
 
-/**@author zzzi
+/**
+ * @author zzzi
  * @date 2023/11/4 15:37
  * 在这里实现refresh方法
  * 并且实现执行实例化之前的修改逻辑，保存实例化之后的修改逻辑
@@ -25,9 +26,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         ConfigurableListableBeanFactory beanFactory = getBeanFactory();
         /**@author zzzi
          * @date 2023/11/6 15:51
-         * 将不能直接注入的资源暂存到一个包装处理器当中
+         * ApplicationContext资源只能在这里获取，但是为了统一资源注入的工作
+         * 在这里先保存，在后面统一注册时才注入
+         * 为了实现这种逻辑，将其包装到了一个后置处理器中
          */
         //3. 暂存一个容器资源到包装处理器中，后期触发修改逻辑自动完成注入
+        //这里直接手动new出来一个对象
         beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 
         // 4. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (Invoke factory processors registered as beans in the context.)
@@ -47,6 +51,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
             beanFactory.addBeanPostProcessor(postProcessor);
         }
     }
+
     //执行实例化前的修改操作
     private void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
         Map<String, BeanFactoryPostProcessor> factoryPostProcessorMap = beanFactory.getBeansOfType(BeanFactoryPostProcessor.class);
@@ -55,7 +60,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         }
     }
 
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/11/3 18:40
      * 这个钩子函数注册了一个销毁的时机，在虚拟机退出之前执行销毁的逻辑
      */
@@ -73,6 +79,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     public void close() {
         getBeanFactory().destroySingletons();
     }
+
     protected abstract void refreshBeanFactory() throws BeansException;
 
     protected abstract ConfigurableListableBeanFactory getBeanFactory();

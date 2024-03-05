@@ -16,6 +16,7 @@ import com.zzzi.springframework.context.ApplicationContextAware;
  * 1. 实现对应的接口
  * 2. 提供对应的成员属性
  * 3. 重写对应的set方法
+ * 主要看这些资源的注入时机在哪
  */
 public class UserService implements BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware {
 
