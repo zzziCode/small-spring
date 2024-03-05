@@ -22,7 +22,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             /**@author zzzi
              * @date 2023/10/31 19:47
-             * 在这里将创建bean和属性填充分开
+             * 在这里将创建bean和属性填充分开，先创建空bean，之后再进行属性填充
              */
             //创建空bean对象，这里利用的是beanDefinition中的beanClass
             bean = createBeanInstance(beanName, beanDefinition, args);
