@@ -20,7 +20,7 @@ public class AppTest
     public void testXml() {
         // 1.初始化 BeanFactory
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:springPostProcessor.xml");
-        //2. 注册钩子函数
+        //2. 注册钩子函数，容器关闭时触发，此时会触发bean的销毁逻辑
         applicationContext.registerShutdownHook();
 
         // 3. 获取Bean对象调用方法

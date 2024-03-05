@@ -115,7 +115,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         // 1. 执行 BeanPostProcessor Before 处理
         Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
 
-        // 执行 Bean 对象的初始化方法
+        // 执行 Bean 对象的初始化方法，有两种初始化实现方式（实现接口和xml配置）
         try {
             invokeInitMethods(beanName, wrappedBean, beanDefinition);
         } catch (Exception e) {
@@ -128,11 +128,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     private void invokeInitMethods(String beanName, Object wrappedBean, BeanDefinition beanDefinition) throws Exception {
-        //1. 实现接口从而实现初始化方法
+        //1. 实现接口从而实现初始化方法（直接调用）
         if (wrappedBean instanceof InitializingBean)
             ((InitializingBean) wrappedBean).afterPropertiesSet();
 
-        //2. 注解配置实现初始化方法
+        //2. 在配置中配置从而实现初始化方法（利用反射）
         String initMethodName = beanDefinition.getInitMethodName();
         if (StrUtil.isNotEmpty(initMethodName) && !(wrappedBean instanceof InitializingBean)) {
             Method initMethod = beanDefinition.getBeanClass().getMethod(initMethodName);

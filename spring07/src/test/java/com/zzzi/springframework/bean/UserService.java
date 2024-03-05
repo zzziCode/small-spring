@@ -5,7 +5,7 @@ import com.zzzi.springframework.beans.factory.DisposableBean;
 import com.zzzi.springframework.beans.factory.InitializingBean;
 
 /**
- * 第二种实现初始化和销毁的方式，
+ * 第二种实现初始化和销毁的方式
  */
 public class UserService implements InitializingBean, DisposableBean {
 
