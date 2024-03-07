@@ -13,6 +13,7 @@ public class ApiTest {
     @Test
     public void testEvent() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        //一旦事件发布，对应的监听器就可以监听到并执行监听逻辑
         applicationContext.publishEvent(new CustomEvent(this, 468, "测试自定义事件"));
         applicationContext.registerShutdownHook();
 

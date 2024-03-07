@@ -63,8 +63,10 @@ public abstract class AbstractApplicationEventMulticaster implements Application
         // 按照 CglibSubclassingInstantiationStrategy、SimpleInstantiationStrategy 不同的实例化类型，需要判断后获取目标 class
         //Cglib实例化后真正的class类型是父类，普通反射实例化后的真正class类型就是其本身，根据这个拿到目标的class
         Class<?> targetClass = ClassUtils.isCglibProxyClass(listenerClass) ? listenerClass.getSuperclass() : listenerClass;
+        //拿到事件监听器的第一个泛型
         Type genericInterface = targetClass.getGenericInterfaces()[0];
 
+        //拿到泛型的实际类型
         Type actualTypeArgument = ((ParameterizedType) genericInterface).getActualTypeArguments()[0];
         //拿到监听器泛型中执行的类名
         String className = actualTypeArgument.getTypeName();

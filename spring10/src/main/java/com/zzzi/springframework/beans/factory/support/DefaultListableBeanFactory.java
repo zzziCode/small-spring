@@ -26,7 +26,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
                 getBean(beanName);
         }
     }
-
+    /**@author zzzi
+     * @date 2024/3/7 16:32
+     * 根据传递而来的类型遍历所有的beanDefinition
+     * 之后以此判断类型之间的匹配关系，匹配上的beanDefinition就会getBean并返回
+     */
     @Override
     public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException {
         Map<String, T> result = new HashMap<>();

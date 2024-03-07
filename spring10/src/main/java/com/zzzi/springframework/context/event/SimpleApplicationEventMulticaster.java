@@ -25,6 +25,11 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
         Set<ApplicationListener<ApplicationEvent>> listeners = getApplicationListeners(event);
         //2. 依次触发监听器的执行
         for (ApplicationListener<ApplicationEvent> listener : listeners) {
+            /**@author zzzi
+             * @date 2024/3/7 16:41
+             * 这里可以将执行了监听逻辑的监听器注销
+             * 前提是监听器监听的事件后面不再会出现
+             */
             listener.onApplicationEvent(event);
         }
     }

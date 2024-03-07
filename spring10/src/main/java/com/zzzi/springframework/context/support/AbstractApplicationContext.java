@@ -71,7 +71,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         publishEvent(new ContextRefreshedEvent(this));
     }
 
-    //拿到所有的监听器，一一保存到广播器的容器中
+    //拿到所有的监听器（实现了ApplicationListener接口的类），一一保存到广播器的容器中
     private void registerListeners() {
         Collection<ApplicationListener> applicationListeners = getBeansOfType(ApplicationListener.class).values();
         for (ApplicationListener listener : applicationListeners) {
@@ -79,7 +79,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         }
     }
 
-    //创建一个简单的广播器对象，并将其保存到容器中
+    //创建一个简单的广播器对象，并将其保存到容器中，这些操作都是显式的
     private void initApplicationEventMulticaster() {
         ConfigurableListableBeanFactory beanFactory = getBeanFactory();
         applicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);
@@ -102,6 +102,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         }
     }
 
+    /**@author zzzi
+     * @date 2024/3/7 15:44
+     * 在这里完成实现，后期发布时间时直接调用即可
+     * 真正的事件发布逻辑其实是由广播器进行发布
+     */
     @Override
     public void publishEvent(ApplicationEvent event) {
         applicationEventMulticaster.multicastEvent(event);
