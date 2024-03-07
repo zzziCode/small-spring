@@ -27,10 +27,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
          * @date 2023/11/6 15:51
          * 将不能直接注入的资源暂存到一个包装处理器当中
          */
-        //3. 暂存一个容器资源到包装处理器中，后期触发修改逻辑自动完成注入
+        //3. 暂存一个容器资源到包装处理器中，后期触发修改逻辑自动完成注入，防止后面想注入的地方无法注入
         beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 
-        // 4. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (Invoke factory processors registered as beans in the context.)
+        // 4. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (初始化前的修改逻辑)
         invokeBeanFactoryPostProcessors(beanFactory);
 
         // 5. BeanPostProcessor 需要提前于其他 Bean 对象实例化之前执行注册操作

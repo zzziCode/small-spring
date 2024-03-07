@@ -11,6 +11,7 @@ import java.util.Map;
  * 在这个内部创建真正的bean
  */
 public class ProxyBeanFactory implements FactoryBean<IUserDao> {
+    //将userDao的创建移动到这个方法中
     @Override
     public IUserDao getObject() throws Exception {
         //动态代理中的handler
@@ -18,7 +19,7 @@ public class ProxyBeanFactory implements FactoryBean<IUserDao> {
 
             // 添加排除方法，toString方法不代理
             if ("toString".equals(method.getName())) return this.toString();
-
+            //到这里就是剩下的queryUserName方法，下面五行代码就是该方法的实现
             Map<String, String> hashMap = new HashMap<>();
             hashMap.put("1", "张三");
             hashMap.put("2", "李四");

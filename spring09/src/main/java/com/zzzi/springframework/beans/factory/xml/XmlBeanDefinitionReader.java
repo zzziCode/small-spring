@@ -69,7 +69,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             String destroyMethodName = bean.getAttribute("destroy-method");
             /**@author zzzi
              * @date 2023/11/7 9:55
-             * 新增了一个标签的解析
+             * 新增了一个标签的解析，主要是解析出当前bean的作用域，默认是单例
              */
             String beanScope = bean.getAttribute("scope");
 

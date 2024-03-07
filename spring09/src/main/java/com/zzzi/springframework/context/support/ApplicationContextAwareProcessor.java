@@ -8,6 +8,8 @@ import com.zzzi.springframework.context.ApplicationContextAware;
 /**@author zzzi
  * @date 2023/11/6 15:47
  * 不能直接注入的容器资源，将其包装到一个修改逻辑当中，后面触发修改逻辑自动完成注入
+ * 一旦new出来这个bean的后置处理器，那么就会判断每个bean是否需要applicationContext
+ * 需要就直接进行注入，这个判断逻辑在初始化之前
  */
 public class ApplicationContextAwareProcessor implements BeanPostProcessor {
     //在这里定义一个成员属性，从而暂存要注入的容器资源

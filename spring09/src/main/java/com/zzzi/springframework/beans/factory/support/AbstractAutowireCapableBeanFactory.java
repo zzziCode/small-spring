@@ -64,7 +64,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * @date 2023/11/7 9:53
          * 新增的判断逻辑，非单例模式不保存销毁逻辑
          */
-        if(beanDefinition.isSingleton())
+        if(!beanDefinition.isSingleton())
             return;
         if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
             /**@author zzzi
@@ -110,6 +110,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 Object value = propertyValue.getValue();
                 if (value instanceof BeanReference) {
                     BeanReference beanReference = (BeanReference) value;
+                    /**@author zzzi
+                     * @date 2024/3/7 14:58
+                     * 这里的getBean还是会有两种情况：
+                     * 1. xml文件则直接返回
+                     * 2. factoryBean方式需要获取内部真正的bean返回
+                     */
                     value = getBean(beanReference.getBeanName());
                 }
                 BeanUtil.setFieldValue(bean, name, value);

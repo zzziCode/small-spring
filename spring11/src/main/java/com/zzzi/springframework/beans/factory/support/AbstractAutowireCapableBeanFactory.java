@@ -94,7 +94,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * @date 2023/11/7 9:53
          * 新增的判断逻辑，非单例模式不保存销毁逻辑
          */
-        if (beanDefinition.isSingleton())
+        if (!beanDefinition.isSingleton())
             return;
         if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
             /**@author zzzi

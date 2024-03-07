@@ -22,6 +22,7 @@ public class FactoryBeanRegistrySupport extends DefaultSingletonBeanRegistry {
      */
     protected Object getCachedObjectForFactoryBean(String beanName) {
         Object bean = factoryBeanObjectCache.get(beanName);
+        //缓存中没有获取到直接返回null，获取到了才返回真正的bean
         return (bean != NULL_OBJECT ? bean : null);
     }
 

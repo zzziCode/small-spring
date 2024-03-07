@@ -31,6 +31,11 @@ public class AppTest {
 
     }
     //测试新的bean创建方式是否生效
+    /**@author zzzi
+     * @date 2024/3/7 15:05
+     * 获取时先从ioc容器中获取外壳bean
+     * 之后从外壳bean中的缓存factoryBeanObjectCache或者getObject方法中获取真正的bean
+     */
     @Test
     public void testFactoryBean() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");

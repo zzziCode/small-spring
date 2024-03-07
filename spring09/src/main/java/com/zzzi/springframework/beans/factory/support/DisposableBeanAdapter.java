@@ -23,6 +23,12 @@ public class DisposableBeanAdapter implements DisposableBean {
         this.destroyMethodName = beanDefinition.getDestroyMethodName();
     }
 
+    /**@author zzzi
+     * @date 2024/3/7 14:12
+     * 这个方法要使用bean去判断当前是实现接口还是使用xml配置从而执行销毁逻辑
+     * 而原型bean都没有保存到ioc容器中，自然无法获取到原型bean
+     * 也就是这里的操作无法执行
+     */
     @Override
     public void destroy() throws Exception {
         //1. 实现接口自定义销毁逻辑

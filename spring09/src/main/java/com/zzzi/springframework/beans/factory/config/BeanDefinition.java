@@ -38,7 +38,7 @@ public class BeanDefinition {
     /**
      * @author zzzi
      * @date 2023/11/7 9:52
-     * 新增的方法
+     * 新增的方法，根据传递而来的性质判断当前bean的模式
      */
     public void setScope(String scope) {
         this.scope = scope;
