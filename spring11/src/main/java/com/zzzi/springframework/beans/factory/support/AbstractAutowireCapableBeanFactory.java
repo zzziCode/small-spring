@@ -68,6 +68,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         Object bean = applyBeanPostProcessorsBeforeInstantiation(beanDefinition.getBeanClass(), beanName);
         if (null != bean) {
             //如果得到代理对象，那么就执行后置修改，然后返回
+            /**@author zzzi
+             * @date 2024/3/8 14:44
+             * 这里引入后置修改的逻辑是为了让bean的生命周期走完
+             * 因为进行了AOP则属性注入，初始化前，初始化等工作都做完了
+             * 此时进行AOP之后需要将初始化后的工作补上
+             */
             bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
         }
         //返回的bean可能为空

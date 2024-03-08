@@ -24,7 +24,8 @@ public class JdkDynamicAopProxy implements AopProxy, InvocationHandler {
         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),adviceSupport.getTargetSource().getTargetClass(),this);
     }
     /**@author zzzi
-     * @date 2023/11/11 16:15 调用原始方法最终会到这里
+     * @date 2023/11/11 16:15
+     * 调用原始方法最终会到这里，这是因为AOP的性质
      * 在这里确定代理对象中的方法有哪些需要被增强
      * 也就是那些与切入点表达式匹配成功
      */

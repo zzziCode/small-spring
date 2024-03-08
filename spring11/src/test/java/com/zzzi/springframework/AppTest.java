@@ -30,7 +30,8 @@ public class AppTest {
      * @author zzzi
      * @date 2023/11/11 19:19
      * 在每个单元测试之前都执行一次
-     * 用来初始化代理对象创建的参数
+     * 用来初始化指定代理对象创建所需要的参数
+     * 这个方法在
      */
     @Before
     public void init() {
@@ -46,7 +47,8 @@ public class AppTest {
     /**
      * @author zzzi
      * @date 2023/11/11 19:19
-     * 测试代理工厂是否有效
+     * 测试代理工厂和方法匹配器是否有效
+     * 给一个对象创建代理对象之后，使用方法匹配器决定对象的方法是否需要增强
      */
     @Test
     public void testProxyFactory() {
@@ -67,7 +69,12 @@ public class AppTest {
         //创建新的方法拦截器
         UserServiceBeforeAdvice beforeAdvice = new UserServiceBeforeAdvice();
         MethodBeforeAdviceInterceptor interceptor = new MethodBeforeAdviceInterceptor(beforeAdvice);
-        //更新方法拦截器
+        /**@author zzzi
+         * @date 2024/3/8 14:48
+         * 在这里更新了方法的拦截器
+         * 设计了一个前置通知
+         * 上面的testProxyFactory方法中，userService增强逻辑是在方法执行最后打印耗时
+         */
         advisedSupport.setMethodInterceptor(interceptor);
         //根据配置好的advisedSupport来创建代理工厂
         ProxyFactory proxyFactory = new ProxyFactory(advisedSupport);
@@ -78,7 +85,8 @@ public class AppTest {
 
     /**@author zzzi
      * @date 2023/11/11 19:27
-     * 测试代理信息封装模块是否有效
+     * 测试代理信息封装模块是否有效，以及类匹配器和方法匹配器是否有效
+     * 这里就用不到之前初始化的advisedSupport了
      */
     @Test
     public void testAspectJExpressionPointcutAdvisor(){

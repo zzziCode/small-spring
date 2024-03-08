@@ -21,6 +21,7 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor {
     /**@author zzzi
      * @date 2023/11/11 15:44
      * 在这里决定通知和原始方法的执行顺序
+     * 由于是前置通知，所以先执行通知，然后调用原始方法
      */
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {

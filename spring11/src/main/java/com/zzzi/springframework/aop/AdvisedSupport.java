@@ -6,6 +6,7 @@ import org.aopalliance.intercept.MethodInterceptor;
  * @author zzzi
  * @date 2023/11/11 15:57
  * 在这里封装创建代理对象所需要的所有参数
+ * 之后将其传递给CGlib或者JDK的代理对象创建逻辑就可以创建对应的代理对象
  */
 public class AdvisedSupport {
     //用来决定使用什么策略创建代理对象

@@ -11,7 +11,7 @@ import java.util.Map;
  * 在这个内部创建真正的bean
  */
 public class ProxyBeanFactory implements FactoryBean<IUserDao> {
-    //将userDao的创建移动到这个方法中
+    //将userDao的创建移动到这个方法中，也就是给userDao创建动态代理
     @Override
     public IUserDao getObject() throws Exception {
         //动态代理中的handler

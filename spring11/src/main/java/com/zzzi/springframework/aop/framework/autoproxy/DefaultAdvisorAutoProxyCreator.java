@@ -12,17 +12,23 @@ import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 
 import java.util.Collection;
-/**@author zzzi
+
+/**
+ * @author zzzi
  * @date 2023/11/11 19:35
  * 整个项目的核心类
  */
 public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
+    //在这里注入了beanFactory
     private DefaultListableBeanFactory beanFactory;
 
     /**
      * @author zzzi
      * @date 2023/11/11 16:46
      * 重点就是这个方法的实现，在里面引入了AOP的机制，类似于初始化前修改逻辑的引入
+     * 在bean的生命周期过程中引入这个方法的执行，从而引入了AOP
+     * 这一步要是创建了对象就是代理对象，这一步要是没有创建对象就说明当前bean不需要进行代理
+     * 直接进行普通的bean生命周期即可
      */
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
