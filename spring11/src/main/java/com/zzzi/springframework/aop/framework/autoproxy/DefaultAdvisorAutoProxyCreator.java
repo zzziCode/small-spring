@@ -36,6 +36,10 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
             return null;
 
         //拿到配置的代理信息
+        /**@author zzzi
+         * @date 2024/3/9 13:55
+         * 代理信息被封装到了一个bean中
+         */
         Collection<AspectJExpressionPointcutAdvisor> advisors = beanFactory.getBeansOfType(AspectJExpressionPointcutAdvisor.class).values();
         for (AspectJExpressionPointcutAdvisor advisor : advisors) {
             //拿到类匹配器，从而判断当前类是否需要代理

@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 /**
  * @author zzzi
  * @date 2023/11/11 16:09
- * 原始方法的执行封装到了这个类中
+ * 原始方法的执行封装到了这个类中，执行原始方法只需要调用proceed方法即可
  */
 public class ReflectiveMethodInvocation implements MethodInvocation {
     protected final Object target;

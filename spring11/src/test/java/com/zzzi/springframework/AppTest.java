@@ -47,7 +47,8 @@ public class AppTest {
     /**
      * @author zzzi
      * @date 2023/11/11 19:19
-     * 测试代理工厂和方法匹配器是否有效
+     * 这个单元测试不关注当前bean是否需要创建代理对象，而是直接创建
+     * 之后测试代理工厂和方法匹配器是否有效
      * 给一个对象创建代理对象之后，使用方法匹配器决定对象的方法是否需要增强
      */
     @Test
@@ -63,6 +64,7 @@ public class AppTest {
      * @author zzzi
      * @date 2023/11/11 19:24
      * 测试方法拦截器是否有效
+     * 给定一个前置通知和方法拦截器，测试方法执行时是否被方法拦截器拦截到了
      */
     @Test
     public void testMethodInterceptor() {
@@ -83,28 +85,29 @@ public class AppTest {
         System.out.println(userService.queryUserInfo());
     }
 
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/11/11 19:27
      * 测试代理信息封装模块是否有效，以及类匹配器和方法匹配器是否有效
      * 这里就用不到之前初始化的advisedSupport了
      */
     @Test
-    public void testAspectJExpressionPointcutAdvisor(){
+    public void testAspectJExpressionPointcutAdvisor() {
         //要代理的目标对象
-        UserService userService=new UserService();
+        UserService userService = new UserService();
 
         //创建一个代理信息封装模块
         AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
         //封装切入点表达式
         advisor.setExpression("execution(* com.zzzi.springframework.bean.IUserService.*(..))");
-        //封装拦截器
+        //封装拦截器，拦截器中有通知的执行逻辑
         advisor.setAdvice(new MethodBeforeAdviceInterceptor(new UserServiceBeforeAdvice()));
 
         //执行类的匹配
         ClassFilter classFilter = advisor.getPointcut().getClassFilter();
         //匹配成功需要创建代理对象
-        if(classFilter.matches(userService.getClass())){
-            AdvisedSupport advisedSupport=new AdvisedSupport();
+        if (classFilter.matches(userService.getClass())) {
+            AdvisedSupport advisedSupport = new AdvisedSupport();
 
             //封装创建代理对象需要的信息
             //封装目标对象
@@ -128,7 +131,8 @@ public class AppTest {
     /**
      * @author zzzi
      * @date 2023/11/11 17:04
-     * 测试AOP是否引入成功
+     * 测试AOP是否成功引入到bean的生命周期中
+     * 发现成功引入，但是代理对象中的原始bean对象还没有属性填充，这个工作留在后面解决
      */
     @Test
     public void testAop() {

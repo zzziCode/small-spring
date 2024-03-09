@@ -82,10 +82,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     /**@author zzzi
      * @date 2023/11/11 17:01
      * 新增的方法，为了执行xml配置文件中的AOP核心bean中的配置
+     * 获取到所有的后置处理器，但是只触发封装了AOP的后置处理器执行
      */
     private Object applyBeanPostProcessorsBeforeInstantiation(Class beanClass, String beanName) {
         for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
             //当前的实例化前策略是一个切面策略
+            /**@author zzzi
+             * @date 2024/3/9 13:53
+             * 当前后置处理器实现了这个接口，代表项目中引入了AOP
+             * 此时就需要调用postProcessBeforeInstantiation尝试给当前bean创建代理对象
+             */
             if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
                 //得到代理对象返回，可能由于切入点表达式无法匹配从而造成代理对象为空
                 Object result = ((InstantiationAwareBeanPostProcessor) beanPostProcessor).postProcessBeforeInstantiation(beanClass, beanName);

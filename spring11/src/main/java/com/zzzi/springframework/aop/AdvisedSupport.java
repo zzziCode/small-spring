@@ -9,7 +9,7 @@ import org.aopalliance.intercept.MethodInterceptor;
  * 之后将其传递给CGlib或者JDK的代理对象创建逻辑就可以创建对应的代理对象
  */
 public class AdvisedSupport {
-    //用来决定使用什么策略创建代理对象
+    //用来决定使用什么策略创建代理对象，默认使用JDK创建动态代理对象
     private boolean proxyTargetClass = false;
     //内部包装了通知和原始方法的执行顺序
     private MethodInterceptor methodInterceptor;

@@ -35,7 +35,7 @@ public class Cglib2AopProxy implements AopProxy {
      * @author zzzi
      * @date 2023/11/11 16:29
      * 设置Cglib的回调函数intercept，执行原始方法时会调用此函数
-     * 在这个函数中实现通知执行的逻辑
+     * 在这个函数中实现通知执行的逻辑，也就是确定原始方法和通知方法的执行顺序
      */
     private static class DynamicAdvisedInterceptor implements MethodInterceptor {
 
@@ -45,6 +45,11 @@ public class Cglib2AopProxy implements AopProxy {
             this.advised = advised;
         }
 
+        /**@author zzzi
+         * @date 2024/3/9 13:44
+         * 动态代理对象执行自己的方法时，会触发此方法的执行
+         * 判断当前方法是否需要被增强，也就是是否与切入点表达式匹配
+         */
         @Override
         public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
             //得到新的原始方法执行逻辑和方法匹配器

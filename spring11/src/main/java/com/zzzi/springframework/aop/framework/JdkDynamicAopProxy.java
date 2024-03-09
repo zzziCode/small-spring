@@ -25,9 +25,9 @@ public class JdkDynamicAopProxy implements AopProxy, InvocationHandler {
     }
     /**@author zzzi
      * @date 2023/11/11 16:15
-     * 调用原始方法最终会到这里，这是因为AOP的性质
-     * 在这里确定代理对象中的方法有哪些需要被增强
-     * 也就是那些与切入点表达式匹配成功
+     * 一旦bean内部有方法需要被增强，就会创建动态代理
+     * 调用其内部方法时就会触发此方法执行
+     * 内部判断当前方法是否需要被增强，
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
