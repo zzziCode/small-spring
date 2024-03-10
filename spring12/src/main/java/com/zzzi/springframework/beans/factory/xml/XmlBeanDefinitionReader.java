@@ -24,6 +24,7 @@ import java.util.List;
  * @author zzzi
  * @date 2023/11/4 14:59
  * 在这里实现加载配置文件
+ * 将获取配置文件的输入流和从配置文件中读取所有的BeanDefinition都集成到这一个类中
  */
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
     public XmlBeanDefinitionReader(BeanDefinitionRegistry registry) {
@@ -58,7 +59,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         /**@author zzzi
          * @date 2023/11/12 11:00
          * 第一种读取bean的方法：更加快捷，不用一个一个手写配置文件，只需要使用Component注解即可
-         * 读取xml配置包路径+类上使用Component的bean加入到注册表
+         * 读取xml配置包路径，将当前路径下类上使用Component的bean加入到注册表
+         * 不管是<bean></bean>还是<component-scan></component-scan>，都是配置文件中的根标签
          */
         // 解析 context:component-scan 标签，扫描包中的类并提取相关信息，用于组装 BeanDefinition
         Element componentScan = root.element("component-scan");
@@ -76,6 +78,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
          * @date 2023/11/12 11:00
          * 第二种读取bean的方法：更加原始
          * 读取xml配置文件中直接配置的bean加入到注册表
+         * 有了包扫描路径这种也要接着扫描，防止既配置了扫描路径，又单独配置了xml形式的bean
          */
         List<Element> beanList = root.elements("bean");
         for (Element bean : beanList) {
@@ -133,6 +136,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
     private void scanPackage(String scanPath) {
         //由于读取到的包扫描路径可能是多个，所以首先解析出包扫描的路径
         String[] split = scanPath.split(",");
+        /**@author zzzi
+         * @date 2024/3/10 14:28
+         * 这里传入的registry可以理解为是一个beanFactory
+         * 所以通过包扫描路径得到的BeanDefinition就可以放入beanFactory中的beanDefinitionMap中
+         */
         ClassPathBeanDefinitionScanner classPathBeanDefinitionScanner = new ClassPathBeanDefinitionScanner(getRegistry());
         //调用其中的doScan方法就可以自动注册
         classPathBeanDefinitionScanner.doScan(split);

@@ -14,8 +14,9 @@ import java.util.Properties;
 /**
  * @author zzzi
  * @date 2023/11/12 14:15
- * 在这里实现占位符替换的逻辑，在bean实例化之前自动触发
+ * 在这里实现占位符替换的逻辑，在bean实例化之前自动触发，因为其实现了BeanFactoryPostProcessor
  * 之后这个类与正常的实例化前修改类一样要配置到xml文件中，之后就可以读取到其中的内容
+ * 然后完成BeanDefinition的修改
  */
 public class PropertyPlaceholderConfigurer implements BeanFactoryPostProcessor {
     public static final String DEFAULT_PLACEHOLDER_PREFIX = "${";

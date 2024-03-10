@@ -39,7 +39,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
                     candidateComponent.setScope(scope);
                 }
                 String beanName = determineBeanName(candidateComponent);
-                //放到注册表中
+                //放到注册表中，这里的registry可以理解为是一个beanFactory
                 registry.registerBeanDefinition(beanName, candidateComponent);
             }
         }

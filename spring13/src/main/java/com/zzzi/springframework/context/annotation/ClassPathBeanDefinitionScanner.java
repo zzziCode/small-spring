@@ -28,6 +28,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
      * @author zzzi
      * @date 2023/11/12 15:01
      * 根据传递来的包扫描路径从而扫描到所有的bean保存到注册表中
+     * 先扫描，此时属性列表为空，后期实例化之后在进行属性填充
      */
     public void doScan(String... basePackages) {
         for (String basePackage : basePackages) {
@@ -45,7 +46,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
         }
         /**@author zzzi
          * @date 2023/11/13 16:20
-         * 在这里手动将注解属性填充的工具类注册到注册表中
+         * 在这里手动将注解属性填充的工具类注册到注册表中，此时beanDefinition中的属性列表还是空
+         * 这样后期就会自动触发属性填充的逻辑
          */
         registry.registerBeanDefinition("internalAutowiredAnnotationProcessor",
                 new BeanDefinition(AutowiredAnnotationBeanPostProcessor.class));

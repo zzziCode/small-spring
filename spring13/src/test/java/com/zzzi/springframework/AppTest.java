@@ -3,6 +3,7 @@ package com.zzzi.springframework;
 import static org.junit.Assert.assertTrue;
 
 import com.zzzi.springframework.bean.IUserService;
+import com.zzzi.springframework.bean.UserService;
 import com.zzzi.springframework.context.support.ClassPathXmlApplicationContext;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class AppTest {
     @Test
     public void testAnnotation() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
-        IUserService userService = applicationContext.getBean("userService", IUserService.class);
+        UserService userService = applicationContext.getBean("userService", UserService.class);
         System.out.println(userService.queryUserInfo());
     }
 }

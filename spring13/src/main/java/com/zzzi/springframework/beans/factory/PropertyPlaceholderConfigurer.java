@@ -74,6 +74,9 @@ public class PropertyPlaceholderConfigurer implements BeanFactoryPostProcessor {
             /**@author zzzi
              * @date 2023/11/13 15:59
              * 在这里保存字符串处理器，后面Value注解属性注入的时候还能用
+             * 也就是说字符串处理器使用了两次：
+             * 1. 在这里直接对属性进行替换
+             * 2. 注解属性填充时替换@Value中的内容
              */
             StringValueResolver resolver = new PlaceholderResolvingStringValueResolver(properties);
             beanFactory.addEmbeddedValueResolver(resolver);

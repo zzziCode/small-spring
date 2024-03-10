@@ -7,7 +7,8 @@ import java.net.URL;
 
 /**@author zzzi
  * @date 2023/11/4 14:49
- * 在这里获取一个资源加载器
+ * 在这里获取一个资源加载器，资源加载器可以获取到文件的输入流
+ * 之后在loadDefinitions方法中得到配置文件中配置的内容
  */
 public class DefaultResourceLoader implements ResourceLoader{
     @Override

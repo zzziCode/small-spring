@@ -14,11 +14,18 @@ import java.lang.reflect.Field;
 /**
  * @author zzzi
  * @date 2023/11/13 15:41
- * 在这里处理注解属性填充个的功能
+ * 在这里处理注解属性填充的功能
+ * 并且是在bean实例化之后自动触发，因为其实现了BeanPostProcessor
+ * 所以spring可以检测到
+ * 这个类的注册在属性占位符替换后直接在代码内部进行注册
  */
 public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
     private ConfigurableListableBeanFactory beanFactory;
 
+    /**@author zzzi
+     * @date 2024/3/10 16:22
+     * 不管是什么属性，只要使用了注解，直接进行填充，越过构造PropertyValues这一步
+     */
     @Override
     public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
         //得到当前bean的真实类型（因为cglib继承了一次）
@@ -49,6 +56,10 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
                 Class<?> beanType = field.getType();
                 String dependentBeanName = null;
                 Object dependentBean = null;
+                /**@author zzzi
+                 * @date 2024/3/10 15:36
+                 * 这里实现了先byName后byType
+                 */
                 Qualifier qualifierAnnotation = field.getAnnotation(Qualifier.class);
                 if (qualifierAnnotation != null) {//指定了所依赖的bean的名称
                     dependentBeanName = qualifierAnnotation.value();

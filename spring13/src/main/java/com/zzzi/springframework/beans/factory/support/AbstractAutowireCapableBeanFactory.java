@@ -68,6 +68,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     /**@author zzzi
      * @date 2023/11/13 16:25
      * 这是新增的一个方法，引入了注解属性填充的模块
+     * 一旦bean中使用了注解进行属性注入，那么这里就会直接在内部对bean的属性进行填充
      */
     private void applyBeanPostProcessorsBeforeApplyingPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
         for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
