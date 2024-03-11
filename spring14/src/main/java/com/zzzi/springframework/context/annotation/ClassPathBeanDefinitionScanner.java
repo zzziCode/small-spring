@@ -46,6 +46,9 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
         /**@author zzzi
          * @date 2023/11/13 16:20
          * 在这里手动将注解属性填充的工具类注册到注册表中
+         * 之所以在这里是因为只有配置了包扫描才有注解属性填充的意义，所以才在这里加入注解属性填充的beanDefinition
+         * 如果没有包扫描，那么就不需要注解属性填充，就不需要注册这个beanDefinition
+         * 否则就是xml配置的bean，此时只需要正常扫描xml文件，占位符替换即可
          */
         registry.registerBeanDefinition("internalAutowiredAnnotationProcessor",
                 new BeanDefinition(AutowiredAnnotationBeanPostProcessor.class));

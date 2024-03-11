@@ -39,7 +39,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
      */
     @Override
     public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
-        return pvs;
+        return null;
     }
 
     private boolean isInfrastructureClass(Class<?> beanClass) {
@@ -55,6 +55,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
      * @author zzzi
      * @date 2023/11/14 13:47
      * 将代理对象的创建时机转移到这里
+     * 此时需要被代理的bean属性填充完成，此时被代理之后属性也有值了
      */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
@@ -75,7 +76,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
             AdvisedSupport advisedSupport = new AdvisedSupport();
             /**@author zzzi
              * @date 2023/11/14 13:47
-             * 这里保存的是已经属性填充过的bean
+             * 这里保存的是已经属性填充过的bean，而不是去新建一个空的bean
              */
             TargetSource targetSource = new TargetSource(bean);
 

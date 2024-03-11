@@ -10,6 +10,11 @@
     <bean class="com.zzzi.springframework.beans.factory.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:token.properties"/>
     </bean>
+
+    <!--新增一个手动配置的bean来测试占位符替换是否会导致重复的属性列表-->
+    <bean class="com.zzzi.springframework.bean.User">
+        <property name="name" value="测试"/>
+    </bean>
     <!--只配置包扫描路径就可以将这个路径下的所有包扫描到注册表中-->
     <context:component-scan base-package="com.zzzi.springframework.bean"/>
 

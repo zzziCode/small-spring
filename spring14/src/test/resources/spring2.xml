@@ -23,5 +23,6 @@
         <property name="advice" ref="methodInterceptor"/>
     </bean>
 
+    <!--将上面AOP必须的一些bean配置好之后，剩下的自定义的bean直接通过包扫描路径来统一配置-->
     <context:component-scan base-package="com.zzzi.springframework.bean2"/>
 </beans>

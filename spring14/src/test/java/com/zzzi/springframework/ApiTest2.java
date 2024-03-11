@@ -6,6 +6,10 @@ import org.junit.Test;
 
 public class ApiTest2 {
 
+    /**@author zzzi
+     * @date 2024/3/11 15:34
+     * 测试包扫描统一配置+注解属性填充如何引入AOP
+     */
     @Test
     public void test_autoProxy_2() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring2.xml");

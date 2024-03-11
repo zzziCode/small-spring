@@ -28,14 +28,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             /**@author zzzi
              * @date 2023/11/11 16:57
-             * 为了引入AOP机制，在创建普通bean之前引入新的 一步
+             * 为了引入AOP机制，在创建普通bean之前引入新的一步
+             * 现在AOP的引入在属性填充之后了，所以这一步相当于作废
              */
             bean = resolveBeforeInstantiation(beanName, beanDefinition);
             if (null != bean) {//为空代表不需要代理，正常执行普通bean的创建
                 return bean;
             }
             bean = createBeanInstance(beanDefinition, beanName, args);
-            // 实例化后判断
+            // 实例化后判断是不是要继续进行属性填充
             boolean continueWithPropertyPopulation = applyBeanPostProcessorsAfterInstantiation(beanName, bean);
             if (!continueWithPropertyPopulation) {
                 return bean;
@@ -237,7 +238,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             throw new BeansException("Invocation of init method of bean[" + beanName + "] failed", e);
         }
 
-        // 3. 执行 BeanPostProcessor After 处理，初始化之后的操作（AOP？？）
+        // 3. 执行 BeanPostProcessor After 处理，初始化之后的操作（AOP）
         wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
         return wrappedBean;
     }

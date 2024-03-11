@@ -66,7 +66,9 @@ public class PropertyPlaceholderConfigurer implements BeanFactoryPostProcessor {
                          * 核心就是下面几步，尝试改变每一个bean中的占位符属性（如果有的话）
                          */
                         value = resolvePlaceholder(properties, strVal);
-                        propertyValues.addPropertyValue(new PropertyValue(propertyValue.getName(), value));
+                        //当前发生了替换才有更新属性列表的必要
+                        if(!value.equals((strVal)))
+                            propertyValues.addPropertyValue(new PropertyValue(propertyValue.getName(), value));
                     }
                 }
             }

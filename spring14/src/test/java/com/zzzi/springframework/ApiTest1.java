@@ -7,6 +7,11 @@ import org.junit.Test;
 
 public class ApiTest1 {
 
+    /**@author zzzi
+     * @date 2024/3/11 15:33
+     * 测试使用手动配置bean的方式引入AOP
+     * 这里没使用包扫描路径，所以也不会进行注解属性配置的步骤
+     */
     @Test
     public void test_autoProxy() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring1.xml");
