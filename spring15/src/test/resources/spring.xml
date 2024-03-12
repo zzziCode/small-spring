@@ -4,6 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <!--使用手动配置的方式-->
     <bean id="husband" class="com.zzzi.springframework.bean.Husband">
         <property name="wife" ref="wife"/>
     </bean>
@@ -13,7 +14,7 @@
     </bean>
 
 
-    <!-- AOP 配置，验证三级缓存 -->
+    <!-- AOP 配置，验证三级缓存，主要是封装了一些创建动态代理所需要的内容 -->
     <bean class="com.zzzi.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 
     <bean id="beforeAdvice" class="com.zzzi.springframework.bean.WifeAdvice"/>

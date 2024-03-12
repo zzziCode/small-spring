@@ -32,10 +32,13 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
      * @date 2023/11/16 19:52
      * 在这里将bean对象的AOP过程提前，AOP过程一旦提前，后面的正常AOP过程就失效了
      * 这里采用一个容器保存提前AOP过的对象
+     * 不管是否需要AOP，AOP的匹配过程已经执行过了，需要创建代理对象就创建，不需要也匹配过了
+     * 后期不在需要匹配了
+     *
      */
     @Override
     public Object getEarlyBeanReference(Object bean, String beanName) {
-        earlyProxyReference.add(bean);
+        earlyProxyReference.add(beanName);
         return wrapIfNecessary(bean, beanName);
     }
 

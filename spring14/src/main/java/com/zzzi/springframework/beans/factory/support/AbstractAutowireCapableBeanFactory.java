@@ -29,7 +29,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             /**@author zzzi
              * @date 2023/11/11 16:57
              * 为了引入AOP机制，在创建普通bean之前引入新的一步
-             * 现在AOP的引入在属性填充之后了，所以这一步相当于作废
+             * 现在AOP的引入在属性填充之后了，这一步可以对外扩展
              */
             bean = resolveBeforeInstantiation(beanName, beanDefinition);
             if (null != bean) {//为空代表不需要代理，正常执行普通bean的创建

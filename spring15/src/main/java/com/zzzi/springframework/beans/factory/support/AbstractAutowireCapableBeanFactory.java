@@ -42,13 +42,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             /**@author zzzi
              * @date 2023/11/11 16:57
-             * 为了引入AOP机制，在创建普通bean之前引入新的 一步
+             * 这里创建了一个空bean
              */
-
             bean = createBeanInstance(beanDefinition, beanName, args);
             /**@author zzzi
              * @date 2023/11/16 20:03
              * 在这里增加一步，当空bean创建完成之后，将其保存到第三级缓存中
+             * 由于只有单例bean才有可能出现循环依赖，所以只有单例bean才需要保存
              */
             if (beanDefinition.isSingleton()) {
                 Object finalBean = bean;
@@ -86,18 +86,21 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
         /**@author zzzi
          * @date 2023/11/7 9:53
-         * 新增的判断逻辑
+         * 新增的判断逻辑,这一步是为了获取到可能经过AOP的代理对象
+         * 一旦出现循环依赖，正常的AOP过程就不会执行，到这一步的bean就是普通的bean
+         * 所以我们要尝试拿到最终被增强的代理对象(如果有的话)
          */
         Object exposedBean = bean;
         if (beanDefinition.isSingleton()) {
             /**@author zzzi
              * @date 2023/11/16 20:08
-             * 这里为了保持单例性，直接尝试从三级缓存中拿到已经创建好的bean对象
+             * 这里为了获取到真正需要保存到一级缓存中的bean，也就是有可能是出现循环依赖提前AOP的bean
+             * 直接尝试从三级缓存中拿到已经创建好的bean对象
              */
-            //exposedBean = getSingleton(beanName);
-            registerSingleton(beanName, bean);
+            exposedBean = getSingleton(beanName);
+            registerSingleton(beanName, exposedBean);
         }
-        return bean;
+        return exposedBean;
     }
 
     private Object getEarlyBeanReference(String beanName, BeanDefinition beanDefinition, Object finalBean) {
@@ -278,7 +281,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             throw new BeansException("Invocation of init method of bean[" + beanName + "] failed", e);
         }
 
-        // 3. 执行 BeanPostProcessor After 处理，初始化之后的操作（AOP？？）
+        // 3. 执行 BeanPostProcessor After 处理，初始化之后的操作（AOP）
         wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
         return wrappedBean;
     }

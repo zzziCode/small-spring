@@ -57,6 +57,12 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
                 }
             }
         }
+        /**@author zzzi
+         * @date 2024/3/12 14:16
+         * 这里返回的bean要么是一级缓存中已经创建完毕的bean
+         * 要么是尝试过AOP的属性填充没完成的bean
+         * 不管有没有创建完毕，但是基础的架子已经搭好了，这个bean的地址后期不会再变化了
+         */
         return singletonObject;
     }
 
