@@ -100,6 +100,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             exposedBean = getSingleton(beanName);
             registerSingleton(beanName, exposedBean);
         }
+        //不管有没有循环依赖，这里返回的都是真正需要的bean
         return exposedBean;
     }
 

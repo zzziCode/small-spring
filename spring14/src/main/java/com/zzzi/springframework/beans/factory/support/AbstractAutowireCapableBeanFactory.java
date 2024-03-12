@@ -68,7 +68,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
         /**@author zzzi
          * @date 2023/11/7 9:53
-         * 新增的判断逻辑
+         * 新增的判断逻辑，单例对象直接保存
          */
         if (beanDefinition.isSingleton())
             addSingleton(beanName, bean);
