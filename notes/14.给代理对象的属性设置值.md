@@ -1,7 +1,7 @@
 ---
-title: "Small_spring14"
-description: "small_spring14"
-keywords: "small_spring14"
+title: "14.给代理对象的属性设置值"
+description: "14.给代理对象的属性设置值"
+keywords: "14.给代理对象的属性设置值"
 
 date: 2023-11-13T20:35:39+08:00
 lastmod: 2023-11-13T20:35:39+08:00
@@ -46,7 +46,7 @@ math: mathjax
 
 # 绝对访问路径
 # Absolute link for visit
-#url: "small_spring14.html"
+#url: "14.给代理对象的属性设置值.html"
 
 
 # 开启各种图渲染，如流程图、时序图、类图等
@@ -54,9 +54,9 @@ math: mathjax
 #mermaid: true
 ---
 
->🍟 small_spring14
+>🍟 14.给代理对象的属性设置值
 
-​	上一节中使用注解的形式进行属性填充，但是填充的是普通的bean，也就是说代理对象的属性还都是`null`，这一节中我们就来解决这个问题，改变代理对象的创建时机，使得创建的bean代理对象内部的属性也不为空，但是并不是直接让代理对象本身的属性不为空，而是增加一个`target`，`target`的内部属性不为空，相关的代码我放到了[仓库](https://github.com/zzziCode/small-spring)中
+​	上一节中使用注解的形式进行属性填充，但是填充的是普通的bean，也就是说代理对象的属性还都是`null`，这一节中我们就来解决这个问题，改变代理对象的创建时机，使得创建的bean代理对象内部的被代理对象的属性也不为空，但是并不是直接让代理对象本身的属性不为空，而是增加一个`target`，`target`的内部属性不为空，相关的代码我放到了[仓库](https://github.com/zzziCode/small-spring)中
 
 <!--more-->
 
@@ -70,14 +70,14 @@ math: mathjax
 
 ## 思路
 
-​		将代理对象的创建延后之后，内部`target`保存了属性填充之后的被代理对象，在代理对象执行方法时，最终会到达`JDK`中的`invoke`方法或者`Cglib`中的`intercept`方法中，在这两个方法中执行方法匹配之后，如果匹配成功则会执行方法拦截器的`invoke`方法，内部最终会调用`target`的原始方法执行，由于之前的`target`是填充的时候新建的一个空对象，所以出现了代理对象内部的属性为空的情况：
+​		将代理对象的创建**延后**之后，内部`target`保存了属性填充之后的被代理对象，在代理对象执行方法时，最终会到达`JDK`中的`invoke`方法或者`Cglib`中的`intercept`方法中，在这两个方法中执行方法匹配之后，如果匹配成功则会执行方法拦截器的`invoke`方法来执行通知方法进行增强，内部最终会调用`target`的原始方法执行，由于之前的`target`是填充的时候新建的一个空对象，所以出现了代理对象内部的属性为空的情况：
 ![image-20231114141734924](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311141535327.png)
 
-在本节中`target`填充的是已经参数填充过后的被代理有参对象，所以解决了之前的问题：
+在本节中AOP的引入时机延后了，`target`填充的是已经参数填充过后的被代理**有参**对象，所以解决了之前的问题：
 
 ![image-20231114141843416](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311141535329.png)
 
-​		总结来说**核心步骤**就是更改了方法拦截器中的`target`，使其存储属性填充过后的bean，这样在代理对象的方法执行被拦截时，触发`target`的原始方法调用，`target`中就有值了
+​		总结来说**核心步骤**就是更改了方法拦截器中的`target`，使其存储属性填充过后的bean，为了实现这个目的就将创建代理对象的步骤延后，等待原始bean属性填充之后再创建，这样在代理对象的方法执行被拦截时，触发`target`的原始方法调用，`target`中就有值了
 
 ### 类的变化
 
@@ -87,7 +87,7 @@ math: mathjax
 
 1. `InstantiationAwareBeanPostProcessor`：接口中新增了一个方法`postProcessAfterInstantiation`，在实现类中暂时没做任何实现，直接返回true
 
-2. `DefaultAdvisorAutoProxyCreator`：将代理对象的创建过程移动到了`postProcessAfterInitialization`方法中，方法内部target填充的是形参中的bean，也就是参数填充过后的bean。原先创建代理对象的方法`postProcessBeforeInstantiation`直接返回null：
+2. `DefaultAdvisorAutoProxyCreator`：将代理对象的创建过程移动到了`postProcessAfterInitialization`方法中，方法内部target填充的是形参中的bean，也就是参数填充过后的bean。原先创建代理对象的方法`postProcessBeforeInstantiation`直接返回null，相当于代理对象的创建时机延后了，之后创建代理对象的逻辑还是和原来一样，先使用`AspectJExpressionPointcutAdvisor`中配置的；类匹配器匹配当前bean是不是需要被代理，需要的话就封装一个`AdvisedSupport`，内部保存创建代理对象所需要的所有信息，将其交给`ProxyFactory`创建一个动态代理对象，唯一的区别就是内部的target现在属性填充过了：
 
    ```java
    @Override
@@ -153,9 +153,8 @@ math: mathjax
    private InstantiationStrategy instantiationStrategy = new SimpleInstantiationStrategy();
    ```
 
-   `applyBeanPostProcessorsAfterInstantiation`方法内部触发所有`postProcessAfterInstantiation`方法的执行，核心就是触发了动态代理对象的创建，而此时被代理对象的属性已经填充过了
 
-​		剩下的操作与之前创建动态代理一样，自定义一个通知，声明如何增强被代理对象，然后在xml文件中配置bean，通知，方法拦截器，切面。然后直接执行，当某一个bean被切面中的切入点表达式匹配成功时就会给他创建代理对象，对外没有产生任何异样，后期获取这个bean的时候，获取的也是代理对象，执行其中的方法会执行方法匹配，匹配成功的方法执行方法拦截器中的逻辑，从而执行通知和被代理对象的原始方法。用户看到的就是增强bean之后的结果了
+​		剩下的操作与之前创建动态代理一样，自定义一个通知，声明如何增强被代理对象，然后在xml文件中配置bean，通知，方法拦截器，切面。然后直接执行，当某一个bean被切面中的切入点表达式匹配成功时就会给他创建代理对象，对外没有产生任何异样，后期获取这个bean的时候，获取的也是代理对象，执行其中的方法会执行方法匹配，匹配成功的方法执行方法拦截器中的逻辑，从而执行通知和被代理对象的原始方法。用户看到的就是增强bean之后的结果了，唯一的区别就是内部被代理的对象属性填充过了
 
 ### bean的创建和获取
 
@@ -169,7 +168,7 @@ math: mathjax
 
    ![image-20231114150729673](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311141535331.png)
 
-3. 保存实例化后的修改逻辑，这里有**两个**修改逻辑，一个是利用**注解填充属性**的`AutowiredAnnotationBeanPostProcessor`，核心方法是`postProcessPropertyValues`，另外一个是**创建代理对象**的`DefaultAdvisorAutoProxyCreator`，核心方法在`postProcessAfterInitialization`：
+3. **保存**实例化后的修改逻辑，这里有**两个**修改逻辑，一个是利用**注解填充属性**的`AutowiredAnnotationBeanPostProcessor`，核心方法是`postProcessPropertyValues`，另外一个是**创建代理对象**的`DefaultAdvisorAutoProxyCreator`，核心方法在`postProcessAfterInitialization`：
 
    ![image-20231114150950924](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311141535333.png)
 
@@ -185,7 +184,7 @@ math: mathjax
 
    3. `applyBeanPostProcessorsAfterInstantiation`中触发所有`postProcessAfterInstantiation`方法的执行，没有做任何改变
 
-   4. `applyBeanPostProcessorsBeforeApplyingPropertyValues`给刚才的空bean填充属性：
+   4. `applyBeanPostProcessorsBeforeApplyingPropertyValues`和`applyPropertyValues`给刚才的空bean填充属性：
 
       ![image-20231114151427109](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311141535336.png)
 
@@ -199,7 +198,7 @@ math: mathjax
 
       - `invokeInitMethods`执行初始化，如果bean携带有初始化方法就在这里执行
 
-      - `applyBeanPostProcessorsAfterInitialization`执行代理对象的创建，是**核心方法**：
+      - `applyBeanPostProcessorsAfterInitialization`执行代理对象的创建，是**核心方法**，本节中将AOP的创建**延后**到这里，保证被代理对象已经**完成**了属性注入：
 
         ![image-20231114151708224](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311141535338.png)
 
@@ -212,9 +211,13 @@ math: mathjax
 5. 创建完成之后，从单例池中获取到bean对象，执行相应的业务，最终的执行结果为：
 
    ![image-20231114152328360](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202311141535340.png)
+   
+   userService创建完代理对象之后的结构为：
+   
+   ![image-20240311160755989](https://zzzi-img-1313100942.cos.ap-beijing.myqcloud.com/img/202403111607991.png)
 
 ## 总结
 
-​		本节中为了给动态代理的对象进行属性填充，另辟蹊径，不直接填充代理对象本身的属性，而是填充内部`target`被代理对象的属性，而这个被代理对象的属性填充已经在`createBean`中做过了，所以将代理对象的创建时机延后，当被代理对象的属性填充完毕之后再进行代理对象的创建，并且将`target`赋值为这个属性填充完毕之后的被代理对象，后期执行被代理对象的原始方法时会调用`target`中的原始方法执行，而`target`中保存的是属性填充过后的被代理对象，所以最终的原始方法执行时就可以使用里面的一些属性，从而解决了之前的问题
+​		本节中为了给动态代理的对象进行属性填充，另辟蹊径，不直接填充代理对象本身的属性，而是填充内部`target`被代理对象的属性，而这个被代理对象的属性填充已经在`createBean`中做过了，所以将代理对象的创建时机延后，当被代理对象的属性填充完毕之后再进行代理对象的创建，并且将`target`赋值为这个属性填充完毕之后的被代理对象，这样既保证了不改变bean正常的生命周期又保证了AOP过后的被代理对象内部的属性有值。后期执行被代理对象的原始方法时会调用`target`中的原始方法执行，而`target`中保存的是属性填充过后的被代理对象，所以最终的原始方法执行时就可以使用里面的一些属性，从而解决了之前的问题
 
 > 核心就是将代理对象的创建时机延后，`target`保存的是属性填充之后的被代理对象
