@@ -16,7 +16,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 
     //默认的实例化策略
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/11/14 14:02
      * 在这里修改默认的实例化策略为JDK
      */
@@ -24,19 +25,36 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
     @Override
     protected Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException {
+        Object bean = resolveBeforeInstantiation(beanName, beanDefinition);
+        if (null != bean) {//为空代表不需要代理，正常执行普通bean的创建
+            return bean;
+        }
+        return doCreateBean(beanName, beanDefinition, args);
+    }
+
+    /**
+     * @author zzzi
+     * @date 2023/11/16 20:03
+     * 抽象出一个新的方法，bean的创建过程移动到了这里
+     */
+    protected Object doCreateBean(String beanName, BeanDefinition beanDefinition, Object[] args) {
         Object bean = null;
         try {
             /**@author zzzi
              * @date 2023/11/11 16:57
-             * 为了引入AOP机制，在创建普通bean之前引入新的一步
-             * 现在AOP的引入在属性填充之后了，这一步可以对外扩展
+             * 为了引入AOP机制，在创建普通bean之前引入新的 一步
              */
-            bean = resolveBeforeInstantiation(beanName, beanDefinition);
-            if (null != bean) {//为空代表不需要代理，正常执行普通bean的创建
-                return bean;
-            }
+
             bean = createBeanInstance(beanDefinition, beanName, args);
-            // 实例化后判断是不是要继续进行属性填充
+            /**@author zzzi
+             * @date 2023/11/16 20:03
+             * 在这里增加一步，当空bean创建完成之后，将其保存到第三级缓存中
+             */
+            if (beanDefinition.isSingleton()) {
+                Object finalBean = bean;
+                addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, beanDefinition, finalBean));
+            }
+            // 实例化后判断
             boolean continueWithPropertyPopulation = applyBeanPostProcessorsAfterInstantiation(beanName, bean);
             if (!continueWithPropertyPopulation) {
                 return bean;
@@ -68,13 +86,34 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
         /**@author zzzi
          * @date 2023/11/7 9:53
-         * 新增的判断逻辑，单例对象直接保存
+         * 新增的判断逻辑
          */
-        if (beanDefinition.isSingleton())
-            addSingleton(beanName, bean);
+        Object exposedBean = bean;
+        if (beanDefinition.isSingleton()) {
+            /**@author zzzi
+             * @date 2023/11/16 20:08
+             * 这里为了保持单例性，直接尝试从三级缓存中拿到已经创建好的bean对象
+             */
+            //exposedBean = getSingleton(beanName);
+            registerSingleton(beanName, bean);
+        }
         return bean;
     }
-    /**@author zzzi
+
+    private Object getEarlyBeanReference(String beanName, BeanDefinition beanDefinition, Object finalBean) {
+        Object exposedBean = finalBean;
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+            if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
+                exposedBean = ((InstantiationAwareBeanPostProcessor) beanPostProcessor).getEarlyBeanReference(exposedBean, beanName);
+                if (exposedBean == null)
+                    return exposedBean;
+            }
+        }
+        return exposedBean;
+    }
+
+    /**
+     * @author zzzi
      * @date 2023/11/14 13:55
      * 新增的方法，依次触发postProcessAfterInstantiation方法的执行
      */
@@ -92,7 +131,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         return continueWithPropertyPopulation;
     }
 
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/11/13 16:25
      * 这是新增的一个方法，引入了注解属性填充的模块
      */
