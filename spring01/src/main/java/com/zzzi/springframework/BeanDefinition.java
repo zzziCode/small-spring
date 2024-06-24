@@ -11,7 +11,7 @@ public class BeanDefinition {
     }
     /**@author zzzi
      * @date 2023/10/29 20:53
-     * 通过构造函数注入bean
+     * 通过构造函数注入bean，手动创建bean
      */
     public BeanDefinition(Object bean) {
         this.bean = bean;
