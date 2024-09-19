@@ -116,13 +116,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * 在这里增加一个容器资源注入的操作，这里不注入应用上下文的资源，因为
          */
         // 1. 容器资源直接注入
-        if(bean instanceof BeanFactoryAware){
+        if (bean instanceof BeanFactoryAware) {
             ((BeanFactoryAware) bean).setBeanFactory(this);
         }
-        if(bean instanceof BeanClassLoaderAware){
+        if (bean instanceof BeanClassLoaderAware) {
             ((BeanClassLoaderAware) bean).setBeanClassLoader(getClassLoader());
         }
-        if(bean instanceof BeanNameAware){
+        if (bean instanceof BeanNameAware) {
             ((BeanNameAware) bean).setBeanName(beanName);
         }
         /**@author zzzi

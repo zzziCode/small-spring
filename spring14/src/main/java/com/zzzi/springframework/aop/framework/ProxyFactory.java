@@ -21,6 +21,10 @@ public class ProxyFactory {
         return proxyObject;
     }
 
+    /**@author zzzi
+     * @date 2024/4/24 9:34
+     * 在这里得到创建代理对象的对象，内部封装真正的被代理对象
+     */
     private AopProxy createProxy() {
         if(advisedSupport.isProxyTargetClass()){
             return new Cglib2AopProxy(advisedSupport);

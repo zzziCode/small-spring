@@ -5,6 +5,7 @@ import com.zzzi.springframework.beans.factory.DisposableBean;
 import com.zzzi.springframework.beans.factory.ObjectFactory;
 import com.zzzi.springframework.beans.factory.config.SingletonBeanRegistry;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +51,7 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
                 //从三级缓存中拿
                 ObjectFactory<?> objectFactory = singletonFactories.get(beanName);
                 if (objectFactory != null) {
-                    //调用这个方法会调用bean创建初期保存的lambda表达式中的内容
+                    //调用这个方法会调用bean创建初期保存的lambda表达式中的内容，提前AOP
                     singletonObject = objectFactory.getObject();
                     earlySingletonObjects.put(beanName, singletonObject);
                     singletonFactories.remove(beanName);

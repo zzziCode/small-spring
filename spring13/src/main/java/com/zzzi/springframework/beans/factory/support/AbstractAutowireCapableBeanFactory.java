@@ -65,7 +65,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         return bean;
     }
 
-    /**@author zzzi
+    /**
+     * @author zzzi
      * @date 2023/11/13 16:25
      * 这是新增的一个方法，引入了注解属性填充的模块
      * 一旦bean中使用了注解进行属性注入，那么这里就会直接在内部对bean的属性进行填充
@@ -222,7 +223,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         if (wrappedBean instanceof InitializingBean)
             ((InitializingBean) wrappedBean).afterPropertiesSet();
 
-        //2. 注解配置实现初始化方法
+        //2. xml配置实现初始化方法
         String initMethodName = beanDefinition.getInitMethodName();
         if (StrUtil.isNotEmpty(initMethodName) && !(wrappedBean instanceof InitializingBean)) {
             Method initMethod = beanDefinition.getBeanClass().getMethod(initMethodName);

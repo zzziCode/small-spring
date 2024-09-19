@@ -9,6 +9,7 @@
         <property name="userDao" ref="proxyUserDao"/>
     </bean>
     <!--不配置作用域就默认是单例-->
+    <!--这里配置的是FactoryBean，内部定义了真正需要使用的Bean的信息-->
     <bean id="proxyUserDao" class="com.zzzi.springframework.bean.ProxyBeanFactory"/>
 
 </beans>

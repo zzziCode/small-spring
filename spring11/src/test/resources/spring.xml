@@ -5,7 +5,7 @@
     <bean id="userService" class="com.zzzi.springframework.bean.UserService"/>
 
 
-    <!--====第一种类型的bean====-->
+    <!--====第二种类型的bean====-->
     <!--配置一个代理类生成器-->
     <bean class="com.zzzi.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 

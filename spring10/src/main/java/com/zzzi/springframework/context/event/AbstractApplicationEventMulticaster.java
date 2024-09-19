@@ -36,24 +36,28 @@ public abstract class AbstractApplicationEventMulticaster implements Application
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory=beanFactory;
+        this.beanFactory = beanFactory;
     }
-    /**@author zzzi
+
+    /**
+     * @author zzzi
      * @date 2023/11/8 13:33
      * 在下面添加两个最核心的方法，根据传递来的事件拿到所有匹配的监听器
      */
-    protected Set<ApplicationListener<ApplicationEvent>> getApplicationListeners(ApplicationEvent event){
-        Set<ApplicationListener<ApplicationEvent>> matchedListeners=new HashSet<>();
+    protected Set<ApplicationListener<ApplicationEvent>> getApplicationListeners(ApplicationEvent event) {
+        Set<ApplicationListener<ApplicationEvent>> matchedListeners = new HashSet<>();
         //根据当前事件找到所有匹配的事件监听器
         for (ApplicationListener<ApplicationEvent> listener : applicationListeners) {
             //查看监听器监听的事件类型与当前事件类型的类之间的关系，匹配就为true
-            if(supportEvent(listener,event)){
+            if (supportEvent(listener, event)) {
                 matchedListeners.add(listener);
             }
         }
         return matchedListeners;
     }
-    /**@author zzzi
+
+    /**
+     * @author zzzi
      * @date 2023/11/8 13:41
      * 这个方法判断当前监听器是不是监听的当前事件
      */

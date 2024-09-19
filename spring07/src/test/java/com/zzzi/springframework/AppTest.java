@@ -10,12 +10,12 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/**@author zzzi
+/**
+ * @author zzzi
  * @date 2023/11/4 15:47
  * 在这里编写测试方法，测试在应用上下文中增加的初始化和销毁模块是否好用
  */
-public class AppTest 
-{
+public class AppTest {
     @Test
     public void testXml() {
         // 1.初始化 BeanFactory，传入这个xml文件可以测试实例化后的两个方法与初始化方法的执行先后顺序

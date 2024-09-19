@@ -35,7 +35,7 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
     }
 
     public void destroySingletons() {
-        //拿到所有销毁方法的方法名
+        //拿到所有需要调用销毁方法的beanName，每个bean都执行自己的销毁方法
         Set<String> keySet = this.disposableBeanMap.keySet();
         Object[] disposableBeanNames = keySet.toArray();
 

@@ -56,7 +56,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
         Object bean = getSingleton(beanName);
         //缓存中有就直接返回真正的bean
         if (bean != null)
-            return (T) getObjectForBeanInstance(bean,beanName);
+            return (T) getObjectForBeanInstance(bean, beanName);
         //缓存中没有就先创建再返回真正的bean
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
         Object newBean = createBean(beanName, beanDefinition, args);
@@ -66,7 +66,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
          * 1. 如果是xml配置的bean，直接返回newbean
          * 2. 如果是FactoryBean中使用java形式配置的bean，那么就需要从FactoryBean对象中拿到真正的bean
          */
-        return (T) getObjectForBeanInstance(newBean,beanName);
+        return (T) getObjectForBeanInstance(newBean, beanName);
     }
 
     /**
@@ -77,21 +77,20 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
      * 1. 尝试从缓存中拿：getCachedObjectForFactoryBean拿到直接返回
      * 2. 调用getObject方法创建：getObjectFromFactoryBean
      * 3. 根据模式判断其是不是需要保存到缓存，需要就保存，最后返回
-     *
      */
     protected Object getObjectForBeanInstance(Object beanInstance, String beanName) {
         //1. 普通的bean直接返回
-        if(!(beanInstance instanceof FactoryBean)){
+        if (!(beanInstance instanceof FactoryBean)) {
             return beanInstance;
         }
         //2. 外壳bean需要得到内部真正的bean对象，先从缓存中拿
         Object bean = getCachedObjectForFactoryBean(beanName);
         //3. 没获取到要么是第一次获取，要么不是单例bean
         //需要创建bean对象
-        if(bean==null){
+        if (bean == null) {
             //转型之后便于调用内部的方法，主要是调用getObject方法
             //得到真正的bean，根据模式判断其是不是要加入缓存中
-            FactoryBean<?> factoryBean= (FactoryBean<?>) beanInstance;
+            FactoryBean<?> factoryBean = (FactoryBean<?>) beanInstance;
             bean = getObjectFromFactoryBean(factoryBean, beanName);
         }
         //4. 返回结果

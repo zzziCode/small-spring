@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**@author zzzi
+/**
+ * @author zzzi
  * @date 2023/11/4 15:09
  * 这里是spring中的核心类，之前的项目以这里为入口
  * 现在的项目将这个入口进行了封装
@@ -22,11 +23,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         Set<String> beanNames = beanDefinitionMap.keySet();
         for (String beanName : beanNames) {
             //单例对象才全部实例化，原型模式的bean不用实例化
-            if(beanDefinitionMap.get(beanName).isSingleton())
+            if (beanDefinitionMap.get(beanName).isSingleton())
                 getBean(beanName);
         }
     }
-    /**@author zzzi
+
+    /**
+     * @author zzzi
      * @date 2024/3/7 16:32
      * 根据传递而来的类型遍历所有的beanDefinition
      * 之后以此判断类型之间的匹配关系，匹配上的beanDefinition就会getBean并返回
@@ -45,7 +48,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
     @Override
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
-        beanDefinitionMap.put(beanName,beanDefinition);
+        beanDefinitionMap.put(beanName, beanDefinition);
     }
 
     @Override

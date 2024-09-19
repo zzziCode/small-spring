@@ -54,7 +54,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * @date 2023/11/7 9:53
          * 新增的判断逻辑
          */
-        if(beanDefinition.isSingleton())
+        if (beanDefinition.isSingleton())
             addSingleton(beanName, bean);
         return bean;
     }
@@ -64,7 +64,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * @date 2023/11/7 9:53
          * 新增的判断逻辑，非单例模式不保存销毁逻辑
          */
-        if(!beanDefinition.isSingleton())
+        if (!beanDefinition.isSingleton())
             return;
         if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
             /**@author zzzi
@@ -132,13 +132,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
          * 在这里增加一个容器资源注入的操作
          */
         // 1. 容器资源直接注入
-        if(bean instanceof BeanFactoryAware){
+        if (bean instanceof BeanFactoryAware) {
             ((BeanFactoryAware) bean).setBeanFactory(this);
         }
-        if(bean instanceof BeanClassLoaderAware){
+        if (bean instanceof BeanClassLoaderAware) {
             ((BeanClassLoaderAware) bean).setBeanClassLoader(getClassLoader());
         }
-        if(bean instanceof BeanNameAware){
+        if (bean instanceof BeanNameAware) {
             ((BeanNameAware) bean).setBeanName(beanName);
         }
         /**@author zzzi

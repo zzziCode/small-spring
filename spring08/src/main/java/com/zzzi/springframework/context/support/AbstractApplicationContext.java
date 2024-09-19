@@ -31,7 +31,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
          * 为了实现这种逻辑，将其包装到了一个后置处理器中
          */
         //3. 暂存一个容器资源到包装处理器中，后期触发修改逻辑自动完成注入
-        //这里直接手动new出来一个对象
+        //这里直接手动new出来一个对象，主要是将这个this保存住
         beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 
         // 4. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (Invoke factory processors registered as beans in the context.)

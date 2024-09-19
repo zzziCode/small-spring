@@ -30,7 +30,7 @@ public class AppTest {
         factory.registerBeanDefinition("userDao", userDaoDefinition);
 
         /**@author zzzi
-         * @date 2023/10/31 20:45·
+         * @date 2023/10/31 20:45
          * 保存UserService的参数列表，便于后期属性填充，这一步正常情况下应该配置在xml文件中
          * 然后读取xml配置文件自动得到属性列表
          */
